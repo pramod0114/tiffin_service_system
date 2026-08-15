@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Admin Portal - TiffinExpress</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --primary-green: #2D6A4F;
+            --dark-green: #1B4332;
+            --accent: #FF6B35;
+            --dark: #0F172A;
+            --gray-100: #F8FAFC;
+            --gray-200: #E2E8F0;
+            --gray-500: #64748B;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #1B4332 0%, #2D6A4F 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            box-sizing: border-box;
+        }
+
+        .admin-card {
+            background: white;
+            padding: 2.5rem 2.2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            max-width: 440px;
+            width: 100%;
+            position: relative;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--primary-green);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+        }
+        .back-link:hover {
+            color: var(--dark-green);
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+        .admin-badge {
+            background: #E8F5E9;
+            color: var(--primary-green);
+            padding: 0.35rem 0.9rem;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-block;
+            margin-bottom: 0.6rem;
+            border: 1px solid #A7F3D0;
+        }
+        .admin-header h1 {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin: 0 0 0.3rem 0;
+        }
+        .admin-header p {
+            font-size: 0.88rem;
+            color: var(--gray-500);
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.4rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 0.9rem;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus {
+            border-color: var(--primary-green);
+        }
+
+        .btn-admin-login {
+            width: 100%;
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 0.85rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+        }
+        .btn-admin-login:hover {
+            background: var(--dark-green);
+            transform: translateY(-1px);
+        }
+
+        .alert {
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1.2rem;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+        .alert-error { background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-card">
+        <a href="index.html" class="back-link">← Back to Customer Website</a>
+
+        <div class="admin-header">
+            <span class="admin-badge">🔐 Kitchen & Operations</span>
+            <h1>Kitchen Admin Portal</h1>
+            <p>Fulfill orders, dispatch couriers & update daily menu</p>
+        </div>
+
+        <div id="alertBox"></div>
+
+        <form action="AdminServlet" method="post" id="adminLoginForm">
+            <input type="hidden" name="action" value="login">
+
+            <div class="form-group">
+                <label for="username">Admin Username</label>
+                <input type="text" id="username" name="username" required placeholder="Enter admin username" autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Admin Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter admin password" autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn-admin-login" id="adminSubmitBtn">Access Operations Dashboard →</button>
+        </form>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        const alertBox = document.getElementById('alertBox');
+        const adminLoginForm = document.getElementById('adminLoginForm');
+        const adminSubmitBtn = document.getElementById('adminSubmitBtn');
+
+        if (error) {
+            alertBox.innerHTML = '<div class="alert alert-error">❌ ' + decodeURIComponent(error) + '</div>';
+        }
+
+        adminLoginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                alertBox.innerHTML = '<div class="alert alert-error">❌ Please enter admin username and password</div>';
+                return;
+            }
+
+            adminSubmitBtn.disabled = true;
+            adminSubmitBtn.textContent = 'Verifying Credentials... ⏳';
+
+            fetch('AdminServlet', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json'
+                },
+                body: new URLSearchParams({
+                    action: 'login',
+                    username: username,
+                    password: password
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    alertBox.innerHTML = '<div class="alert alert-success">✅ Authenticated! Opening Kitchen Operations...</div>';
+                    window.location.href = data.redirect || 'admin-dashboard.html';
+                } else {
+                    adminSubmitBtn.disabled = false;
+                    adminSubmitBtn.textContent = 'Access Operations Dashboard →';
+                    alertBox.innerHTML = '<div class="alert alert-error">❌ ' + (data.error || 'Invalid credentials') + '</div>';
+                }
+            })
+            .catch(() => {
+                adminLoginForm.submit();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "TiffinExpress",
+  "description": "A fresh homemade meals and tiffin delivery platform featuring daily rotating menus, ordering system, and admin order fulfillment dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

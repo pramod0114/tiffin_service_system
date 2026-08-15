@@ -1,0 +1,2757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - TiffinExpress</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --primary: #FF6B35;
+            --primary-dark: #E55525;
+            --primary-light: #FFF0EB;
+            --secondary: #2D6A4F;
+            --secondary-light: #E8F5E9;
+            --dark: #1E293B;
+            --gray-100: #F8FAFC;
+            --gray-200: #E2E8F0;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-700: #334155;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+            --shadow-lg: 0 16px 40px rgba(0,0,0,0.12);
+        }
+
+        body {
+            background: #F4F6F8;
+            color: var(--dark);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Top Navbar */
+        .dash-nav {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+        .dash-nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0.85rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dash-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+        .dash-logo .logo-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .wallet-pill {
+            background: #FFF9E6;
+            border: 1px solid #FFE082;
+            color: #B7791F;
+            padding: 0.4rem 0.9rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .wallet-pill:hover {
+            background: #FEF08A;
+            transform: translateY(-1px);
+        }
+        .wallet-add-btn {
+            background: #B45309;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .cart-trigger-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 0.5rem 1.1rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .cart-trigger-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        .cart-badge {
+            background: white;
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 0.15rem 0.45rem;
+            border-radius: 12px;
+        }
+        .user-menu-btn {
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            padding: 0.45rem 0.9rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: var(--gray-700);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .user-menu-btn:hover {
+            background: var(--gray-200);
+        }
+        .btn-nav-logout {
+            background: #FEE2E2;
+            color: #DC2626;
+            border: 1px solid #FECACA;
+            border-radius: 20px;
+            padding: 0.45rem 0.9rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: all 0.2s;
+        }
+        .btn-nav-logout:hover {
+            background: #DC2626;
+            color: white;
+        }
+
+        /* Layout Container */
+        .dash-container {
+            max-width: 1280px;
+            margin: 1.8rem auto 4rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header Greeting Banner */
+        .greeting-card {
+            background: linear-gradient(135deg, #2D6A4F 0%, #1B4332 100%);
+            color: white;
+            border-radius: var(--radius-lg);
+            padding: 1.8rem 2.2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+        .greeting-card::after {
+            content: "🍱";
+            position: absolute;
+            right: 2rem;
+            bottom: -1rem;
+            font-size: 7rem;
+            opacity: 0.18;
+            pointer-events: none;
+        }
+        .greeting-text h1 {
+            font-size: 1.7rem;
+            font-weight: 800;
+            margin: 0 0 0.35rem 0;
+        }
+        .greeting-text p {
+            color: #D8F3DC;
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0;
+        }
+        .quick-stats-row {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .quick-stat {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(8px);
+            padding: 0.45rem 0.9rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Tabs Navigation */
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 2px solid var(--gray-200);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.9rem 1.4rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--gray-500);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .tab-btn:hover {
+            color: var(--primary);
+        }
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Menu View Layout */
+        .menu-filter-bar {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 1.2rem 1.5rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid var(--gray-200);
+        }
+        .day-chips, .category-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        .chip-btn {
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.83rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chip-btn:hover {
+            background: #E2E8F0;
+        }
+        .chip-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .search-box {
+            position: relative;
+            min-width: 260px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 0.6rem 0.9rem 0.6rem 2.2rem;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 25px;
+            font-size: 0.9rem;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .search-box input:focus {
+            border-color: var(--primary);
+        }
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.95rem;
+            color: var(--gray-500);
+        }
+
+        /* Dishes Grid */
+        .dishes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 1.5rem;
+        }
+        .dish-card {
+            background: white;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.25s ease;
+        }
+        .dish-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: #CBD5E1;
+        }
+        .dish-card-image-wrap {
+            position: relative;
+            height: 180px;
+            background: #E2E8F0;
+        }
+        .dish-card-image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .dish-day-tag {
+            position: absolute;
+            top: 0.8rem;
+            left: 0.8rem;
+            background: rgba(0,0,0,0.75);
+            color: white;
+            padding: 0.25rem 0.65rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            backdrop-filter: blur(4px);
+        }
+        .dish-rating-tag {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            background: white;
+            color: #B45309;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .dish-card-body {
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .dish-card-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin: 0 0 0.35rem 0;
+            line-height: 1.3;
+        }
+        .dish-card-desc {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            line-height: 1.45;
+            margin-bottom: 0.9rem;
+            flex: 1;
+        }
+        .nutrition-row {
+            display: flex;
+            gap: 0.6rem;
+            font-size: 0.78rem;
+            color: var(--gray-500);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            background: var(--gray-100);
+            padding: 0.4rem 0.6rem;
+            border-radius: 6px;
+        }
+        .dish-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--gray-200);
+            padding-top: 0.9rem;
+            margin-top: auto;
+        }
+        .dish-price {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .dish-action-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.55rem 1.1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .dish-action-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.03);
+        }
+
+        /* Live Orders & Tracking Tab */
+        .orders-list-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+        .order-card {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+        }
+        .order-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--gray-200);
+            padding-bottom: 1rem;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .order-id-block {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+        .order-time-tag {
+            font-size: 0.82rem;
+            color: var(--gray-500);
+            margin-top: 0.2rem;
+        }
+        .order-status-pill {
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .status-pending { background: #FEF3C7; color: #92400E; }
+        .status-preparing { background: #E0E7FF; color: #3730A3; }
+        .status-out-for-delivery { background: #DBEAFE; color: #1E40AF; }
+        .status-delivered { background: #D1FAE5; color: #065F46; }
+        .status-cancelled, .status-declined { background: #FEE2E2; color: #991B1B; }
+
+        .tracking-stepper {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            position: relative;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        .tracking-stepper::before {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 12%;
+            right: 12%;
+            height: 3px;
+            background: var(--gray-200);
+            z-index: 1;
+        }
+        .step-item {
+            position: relative;
+            z-index: 2;
+        }
+        .step-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.4rem auto;
+            font-weight: 800;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+        .step-item.active .step-dot {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+        .step-item.completed .step-dot {
+            background: var(--secondary);
+            color: white;
+        }
+        .step-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gray-500);
+        }
+        .step-item.active .step-label,
+        .step-item.completed .step-label {
+            color: var(--dark);
+        }
+
+        .order-details-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            background: var(--gray-100);
+            padding: 1.2rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1.2rem;
+        }
+        .order-meta-info {
+            font-size: 0.85rem;
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+        .order-card-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .btn-action-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.55rem 1.1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+        .btn-action-primary:hover {
+            background: var(--primary-dark);
+        }
+        .btn-action-secondary {
+            background: white;
+            border: 1.5px solid var(--gray-200);
+            color: var(--gray-700);
+            padding: 0.55rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+        .btn-action-secondary:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-400);
+        }
+        .btn-outline-danger {
+            background: #FFF5F5;
+            color: #DC2626;
+            border: 1px solid #FECACA;
+            padding: 0.55rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-outline-danger:hover {
+            background: #DC2626;
+            color: white;
+        }
+
+        /* Subscription Builder */
+        .subs-builder-card {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+        .subs-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2rem;
+        }
+        .subs-option-group {
+            margin-bottom: 1.5rem;
+        }
+        .subs-option-group label {
+            display: block;
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--dark);
+            margin-bottom: 0.6rem;
+        }
+        .radio-pills {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.6rem;
+        }
+        .radio-pill-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: var(--gray-100);
+            border: 1.5px solid var(--gray-200);
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .radio-pill-item:hover {
+            background: #F1F5F9;
+            border-color: #CBD5E1;
+        }
+        .radio-pill-item input[type="radio"]:checked + span {
+            color: var(--primary);
+            font-weight: 800;
+        }
+        .subs-summary-box {
+            background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);
+            border: 2px dashed #93C5FD;
+            border-radius: 14px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .subs-price-highlight {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 0.2rem;
+        }
+        .subs-per-meal {
+            color: var(--gray-500);
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+        }
+        .btn-subscribe-now {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .btn-subscribe-now:hover {
+            background: #1B4332;
+        }
+
+        /* Cart Drawer */
+        .cart-drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(3px);
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .cart-drawer-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 440px;
+            max-width: 92vw;
+            background: white;
+            box-shadow: var(--shadow-lg);
+            z-index: 201;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-drawer.open {
+            transform: translateX(0);
+        }
+        .cart-header {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart-header h3 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin: 0;
+        }
+        .btn-close-cart {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+        .cart-items-body {
+            flex: 1;
+            padding: 1.2rem 1.5rem;
+            overflow-y: auto;
+        }
+        .cart-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.9rem 0;
+            border-bottom: 1px solid var(--gray-200);
+            gap: 0.8rem;
+        }
+        .cart-item-info {
+            flex: 1;
+        }
+        .cart-item-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--dark);
+        }
+        .cart-item-price {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gray-100);
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+        }
+        .qty-btn {
+            background: white;
+            border: 1px solid var(--gray-200);
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cart-footer {
+            padding: 1.2rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            background: var(--gray-100);
+        }
+        .coupon-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+        .coupon-bar input {
+            flex: 1;
+            padding: 0.55rem 0.9rem;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+        .btn-apply-coupon {
+            background: var(--gray-700);
+            color: white;
+            border: none;
+            padding: 0.55rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+        }
+        .bill-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            color: var(--gray-700);
+            margin-bottom: 0.4rem;
+        }
+        .bill-row.total {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--dark);
+            border-top: 1px dashed var(--gray-200);
+            padding-top: 0.6rem;
+            margin-top: 0.6rem;
+        }
+        .btn-checkout {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 0.85rem;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.2s;
+        }
+        .btn-checkout:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Generic Modals */
+        .modal-popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            padding: 1rem;
+        }
+        .modal-popup.open {
+            display: flex;
+        }
+        .modal-card-box {
+            background: white;
+            width: 520px;
+            max-width: 95vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            animation: zoomIn 0.2s ease;
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Star Rating */
+        .star-rating-row {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            margin: 1rem 0;
+        }
+        .star-item {
+            color: #D1D5DB;
+            transition: color 0.2s;
+        }
+        .star-item.selected {
+            color: #F59E0B;
+        }
+
+        /* TAX INVOICE & RECEIPT STYLES */
+        .receipt-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+            color: #0F172A;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            position: relative;
+        }
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed #CBD5E1;
+            padding-bottom: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .receipt-logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #FF6B35;
+        }
+        .receipt-sub {
+            font-size: 0.78rem;
+            color: #64748B;
+            margin-top: 0.2rem;
+        }
+        .receipt-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+            font-size: 0.82rem;
+            margin-bottom: 1.2rem;
+            background: #F8FAFC;
+            padding: 0.8rem;
+            border-radius: 8px;
+        }
+        .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-bottom: 1.2rem;
+        }
+        .receipt-table th {
+            text-align: left;
+            border-bottom: 1.5px solid #E2E8F0;
+            padding: 0.4rem 0;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #64748B;
+        }
+        .receipt-table td {
+            padding: 0.55rem 0;
+            border-bottom: 1px solid #F1F5F9;
+        }
+        .receipt-totals-box {
+            border-top: 2px dashed #CBD5E1;
+            padding-top: 0.8rem;
+            font-size: 0.85rem;
+        }
+        .receipt-total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.35rem;
+            color: #475569;
+        }
+        .receipt-grand-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0F172A;
+            border-top: 1px solid #E2E8F0;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .receipt-stamp {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border: 2px solid #059669;
+            color: #059669;
+            font-weight: 800;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            border-radius: 6px;
+            transform: rotate(-3deg);
+            margin: 0.8rem 0;
+        }
+
+        /* Floating Support Chat Widget */
+        .chat-fab-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #2D6A4F, #1B4332);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 0.75rem 1.4rem;
+            font-weight: 800;
+            font-size: 0.95rem;
+            box-shadow: 0 10px 25px rgba(45, 106, 79, 0.35);
+            cursor: pointer;
+            z-index: 150;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.25s ease;
+        }
+        .chat-fab-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #1B4332, #081C15);
+        }
+        .chat-drawer {
+            position: fixed;
+            bottom: 5.5rem;
+            right: 2rem;
+            width: 420px;
+            max-width: 94vw;
+            height: 560px;
+            max-height: 82vh;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+            border: 1px solid var(--gray-200);
+            display: none;
+            flex-direction: column;
+            z-index: 151;
+            overflow: hidden;
+            animation: drawerSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes drawerSlideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .chat-drawer.open {
+            display: flex;
+        }
+        .chat-header {
+            background: linear-gradient(135deg, #2D6A4F 0%, #1B4332 100%);
+            color: white;
+            padding: 1rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .chat-chips-bar {
+            display: flex;
+            gap: 0.4rem;
+            padding: 0.55rem 0.8rem;
+            background: #F1F5F9;
+            overflow-x: auto;
+            white-space: nowrap;
+            border-bottom: 1px solid var(--gray-200);
+            scrollbar-width: thin;
+        }
+        .chat-chip {
+            background: white;
+            border: 1px solid #CBD5E1;
+            color: #334155;
+            padding: 0.3rem 0.65rem;
+            border-radius: 20px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+        .chat-chip:hover {
+            background: #2D6A4F;
+            color: white;
+            border-color: #2D6A4F;
+        }
+        .chat-messages-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background: #F8FAFC;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+        .chat-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 14px;
+            font-size: 0.88rem;
+            line-height: 1.55;
+            max-width: 88%;
+            word-wrap: break-word;
+        }
+        .chat-bubble.bot {
+            background: white;
+            border: 1px solid #E2E8F0;
+            color: var(--dark);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+        .chat-bubble.bot strong {
+            color: #0F172A;
+            font-weight: 700;
+        }
+        .chat-bubble.user {
+            background: linear-gradient(135deg, #FF6B35, #E55525);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 3px 8px rgba(255, 107, 53, 0.25);
+        }
+        .chat-typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 0.9rem;
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            align-self: flex-start;
+            font-size: 0.78rem;
+            color: #64748B;
+            border-bottom-left-radius: 4px;
+        }
+        .typing-dots {
+            display: flex;
+            gap: 0.25rem;
+        }
+        .typing-dot {
+            width: 5px;
+            height: 5px;
+            background: #2D6A4F;
+            border-radius: 50%;
+            animation: typingBounce 1.2s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+        .chat-input-bar {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 0.5rem;
+            background: white;
+            align-items: center;
+        }
+        .chat-input-bar input {
+            flex: 1;
+            padding: 0.65rem 0.9rem;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .chat-input-bar input:focus {
+            border-color: #2D6A4F;
+        }
+        .chat-input-bar button {
+            background: #2D6A4F;
+            color: white;
+            border: none;
+            padding: 0.65rem 1.1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .chat-input-bar button:hover {
+            background: #1B4332;
+        }
+
+
+        /* Toast Alert */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .toast-msg {
+            background: #1E293B;
+            color: white;
+            padding: 0.8rem 1.4rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            animation: slideUp 0.3s ease;
+        }
+        .toast-msg.success { background: #065F46; }
+        .toast-msg.error { background: #991B1B; }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printableReceiptArea, #printableReceiptArea * {
+                visibility: visible;
+            }
+            #printableReceiptArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .subs-grid { grid-template-columns: 1fr; }
+            .greeting-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .tracking-stepper { grid-template-columns: 1fr 1fr; gap: 1rem; }
+            .order-details-grid { grid-template-columns: 1fr; }
+            .menu-filter-bar { flex-direction: column; align-items: stretch; }
+            .chat-fab-btn { bottom: 1.5rem; right: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav class="dash-nav">
+        <div class="dash-nav-inner">
+            <a href="index.html" class="dash-logo">
+                <span>🍱</span>
+                <span class="logo-gradient">TiffinExpress</span>
+            </a>
+            <div class="nav-actions">
+                <div class="wallet-pill" id="walletPill" onclick="openWalletTopupModal()" title="Click to Add Wallet Funds">
+                    <span>💰 Wallet:</span>
+                    <strong id="userWalletAmount">₹0</strong>
+                    <span class="wallet-add-btn">+</span>
+                </div>
+                <button class="cart-trigger-btn" id="openCartBtn" onclick="toggleCartDrawer(true)">
+                    <span>🛒 My Basket</span>
+                    <span class="cart-badge" id="cartCountBadge">0</span>
+                </button>
+                <div class="user-menu-btn" onclick="switchTab('tabProfile')">
+                    <span id="navUserName">👤 My Account</span>
+                </div>
+                <button class="btn-nav-logout" onclick="logoutUser()" title="Logout from TiffinExpress">
+                    <span>🚪</span> Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTAINER -->
+    <div class="dash-container">
+
+        <!-- GREETING HEADER -->
+        <div class="greeting-card">
+            <div class="greeting-text">
+                <h1 id="greetingHeading">Welcome Back, Foodie! 👋</h1>
+                <p>Hot, wholesome, mom-style homemade meals prepared fresh for today's lunch & dinner slots.</p>
+                <div class="quick-stats-row">
+                    <div class="quick-stat">⭐ 4.9 Kitchen Quality Rating</div>
+                    <div class="quick-stat">🚚 Insulated Hot Delivery</div>
+                    <div class="quick-stat">🥗 100% Homemade Taste</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs-header">
+            <button class="tab-btn active" onclick="switchTab('tabMenu', this)">
+                <span>🍽️</span> Daily Menu & Ordering
+            </button>
+            <button class="tab-btn" onclick="switchTab('tabOrders', this)">
+                <span>📦</span> Live Orders & Receipts (<span id="activeOrdersCount">0</span>)
+            </button>
+            <button class="tab-btn" onclick="switchTab('tabSubs', this)">
+                <span>🗓️</span> Tiffin Subscription Plans
+            </button>
+            <button class="tab-btn" onclick="switchTab('tabProfile', this)">
+                <span>👤</span> Profile & Wallet
+            </button>
+        </div>
+
+        <!-- TAB 1: MENU -->
+        <div id="tabMenu" class="tab-content active">
+            <!-- Filter Bar -->
+            <div class="menu-filter-bar">
+                <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                    <div class="day-chips" id="dayFilterChips">
+                        <button class="chip-btn active" onclick="filterMenu('day', 'All', this)">All Days</button>
+                        <button class="chip-btn" onclick="filterMenu('day', 'Daily', this)">Daily Specials</button>
+                        <button class="chip-btn" onclick="filterMenu('day', 'Monday', this)">Mon</button>
+                        <button class="chip-btn" onclick="filterMenu('day', 'Tuesday', this)">Tue</button>
+                        <button class="chip-btn" onclick="filterMenu('day', 'Wednesday', this)">Wed</button>
+                        <button class="chip-btn" onclick="filterMenu('day', 'Thursday', this)">Thu</button>
+                        <button class="chip-btn" onclick="filterMenu('day', 'Friday', this)">Fri</button>
+                        <button class="chip-btn" onclick="filterMenu('day', 'Saturday', this)">Sat</button>
+                        <button class="chip-btn" onclick="filterMenu('day', 'Sunday', this)">Sun</button>
+                    </div>
+                    <div class="category-chips" id="catFilterChips">
+                        <button class="chip-btn active" onclick="filterMenu('category', 'All', this)">All Categories</button>
+                        <button class="chip-btn" onclick="filterMenu('category', 'North Indian', this)">North Indian</button>
+                        <button class="chip-btn" onclick="filterMenu('category', 'South Indian', this)">South Indian</button>
+                        <button class="chip-btn" onclick="filterMenu('category', 'Healthy & Diet', this)">Healthy & Low Cal</button>
+                        <button class="chip-btn" onclick="filterMenu('category', 'Regional Specials', this)">Regional Specials</button>
+                    </div>
+                </div>
+
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="menuSearchInput" placeholder="Search dishes, thalis, combos..." oninput="filterMenu('search', this.value)">
+                </div>
+            </div>
+
+            <!-- Dishes Grid -->
+            <div class="dishes-grid" id="dishesGridContainer">
+                <div style="grid-column: 1/-1; text-align:center; padding: 3rem; color: var(--gray-500);">
+                    Loading today's fresh kitchen menu... 🍲
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: LIVE ORDERS & TRACKING -->
+        <div id="tabOrders" class="tab-content">
+            <div class="orders-list-grid" id="ordersListContainer">
+                <div style="text-align:center; padding: 3rem; color: var(--gray-500);">
+                    Loading your orders... 📦
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: SUBSCRIPTION PLANS -->
+        <div id="tabSubs" class="tab-content">
+            <div class="subs-builder-card">
+                <div style="margin-bottom:1.5rem;">
+                    <span style="background:var(--secondary-light);color:var(--secondary);padding:0.25rem 0.8rem;border-radius:20px;font-size:0.8rem;font-weight:700;">Zero Hassle Cooking</span>
+                    <h2 style="font-size:1.6rem;font-weight:800;margin-top:0.4rem;margin-bottom:0.3rem;">Design Your Custom Tiffin Subscription</h2>
+                    <p style="color:var(--gray-500);font-size:0.92rem;margin:0;">Enjoy seamless home-delivered lunches & dinners with flexible pause & skip options whenever you travel.</p>
+                </div>
+
+                <div class="subs-grid">
+                    <div>
+                        <div class="subs-option-group">
+                            <label>1. Choose Plan Duration</label>
+                            <div class="radio-pills">
+                                <label class="radio-pill-item">
+                                    <input type="radio" name="subPlan" value="30-Day Monthly Tiffin Plan" checked onchange="calcSubscriptionPrice()">
+                                    <span>🗓️ 30-Day Monthly Plan (Save 25%)</span>
+                                </label>
+                                <label class="radio-pill-item">
+                                    <input type="radio" name="subPlan" value="7-Day Weekly Trial Plan" onchange="calcSubscriptionPrice()">
+                                    <span>📅 7-Day Weekly Trial</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="subs-option-group">
+                            <label>2. Meal Deliveries Per Day</label>
+                            <div class="radio-pills">
+                                <label class="radio-pill-item">
+                                    <input type="radio" name="subMeals" value="Lunch & Dinner" checked onchange="calcSubscriptionPrice()">
+                                    <span>☀️ 🌙 Both Lunch & Dinner</span>
+                                </label>
+                                <label class="radio-pill-item">
+                                    <input type="radio" name="subMeals" value="Lunch Only" onchange="calcSubscriptionPrice()">
+                                    <span>☀️ Lunch Only (12:30 PM)</span>
+                                </label>
+                                <label class="radio-pill-item">
+                                    <input type="radio" name="subMeals" value="Dinner Only" onchange="calcSubscriptionPrice()">
+                                    <span>🌙 Dinner Only (7:30 PM)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="subs-option-group">
+                            <label>3. Dietary Preference</label>
+                            <div class="radio-pills">
+                                <label class="radio-pill-item">
+                                    <input type="radio" name="subDiet" value="Pure Veg" checked>
+                                    <span>🌱 Pure Vegetarian</span>
+                                </label>
+                                <label class="radio-pill-item">
+                                    <input type="radio" name="subDiet" value="Jain Friendly">
+                                    <span>🌿 Jain Friendly (No Onion/Garlic)</span>
+                                </label>
+                                <label class="radio-pill-item">
+                                    <input type="radio" name="subDiet" value="High Protein">
+                                    <span>💪 High Protein (Extra Paneer/Sprouts)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary box -->
+                    <div class="subs-summary-box">
+                        <div>
+                            <h3 style="font-size:1.1rem;font-weight:800;color:var(--dark);margin-top:0;">Subscription Summary</h3>
+                            <div style="margin:1rem 0; font-size:0.9rem; color:var(--gray-700); line-height:1.8;">
+                                <div>• Total Meals Included: <strong id="subTotalMealsText">60 Meals</strong></div>
+                                <div>• Insulated Hot Packaged Delivery: <strong>FREE</strong></div>
+                                <div>• Weekend Flexibility: <strong>Pause anytime with 1-click</strong></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="subs-price-highlight" id="subPriceDisplay">₹3,000</div>
+                            <div class="subs-per-meal" id="subPerMealDisplay">Just ₹50 / delicious meal</div>
+                            <button class="btn-subscribe-now" onclick="confirmSubscriptionPlan()">🚀 Activate Subscription</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Subscriptions List -->
+            <div id="activeSubsContainer"></div>
+        </div>
+
+        <!-- TAB 4: PROFILE & WALLET -->
+        <div id="tabProfile" class="tab-content">
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:2rem;">
+                <div style="background:white; border-radius:var(--radius-md); padding:1.8rem; box-shadow:var(--shadow-sm); border:1px solid var(--gray-200);">
+                    <h2 style="font-size:1.25rem; font-weight:800; margin-bottom:1.2rem;">👤 Personal Information</h2>
+                    <form id="profileForm" onsubmit="handleProfileUpdate(event)">
+                        <div style="margin-bottom:1rem;">
+                            <label style="display:block; font-weight:700; font-size:0.88rem; margin-bottom:0.35rem;">Full Name</label>
+                            <input type="text" id="profName" style="width:100%; padding:0.75rem; border:1.5px solid var(--gray-200); border-radius:8px; font-size:0.95rem; box-sizing:border-box;" required>
+                        </div>
+                        <div style="margin-bottom:1rem;">
+                            <label style="display:block; font-weight:700; font-size:0.88rem; margin-bottom:0.35rem;">Email Address (Account ID)</label>
+                            <input type="email" id="profEmail" style="width:100%; padding:0.75rem; border:1.5px solid var(--gray-200); border-radius:8px; font-size:0.95rem; background:#F1F5F9; box-sizing:border-box;" readonly>
+                        </div>
+                        <div style="margin-bottom:1rem;">
+                            <label style="display:block; font-weight:700; font-size:0.88rem; margin-bottom:0.35rem;">Phone Number</label>
+                            <input type="tel" id="profPhone" style="width:100%; padding:0.75rem; border:1.5px solid var(--gray-200); border-radius:8px; font-size:0.95rem; box-sizing:border-box;" required>
+                        </div>
+                        <div style="margin-bottom:1.5rem;">
+                            <label style="display:block; font-weight:700; font-size:0.88rem; margin-bottom:0.35rem;">Default Delivery Address</label>
+                            <textarea id="profAddress" rows="3" style="width:100%; padding:0.75rem; border:1.5px solid var(--gray-200); border-radius:8px; font-size:0.95rem; font-family:inherit; box-sizing:border-box;" required></textarea>
+                        </div>
+                        <button type="submit" style="background:var(--secondary); color:white; border:none; padding:0.75rem 1.4rem; border-radius:8px; font-weight:700; cursor:pointer;">💾 Save Profile Details</button>
+                    </form>
+                </div>
+
+                <div style="background:white; border-radius:var(--radius-md); padding:1.8rem; box-shadow:var(--shadow-sm); border:1px solid var(--gray-200);">
+                    <h2 style="font-size:1.25rem; font-weight:800; margin-bottom:1.2rem;">💰 Wallet & Rewards</h2>
+                    <div style="background:#FFF9E6; border:1.5px dashed #F59E0B; border-radius:12px; padding:1.2rem; margin-bottom:1.2rem;">
+                        <h4 style="color:#B45309; font-weight:800; margin:0;">Tiffin Wallet Balance</h4>
+                        <div style="font-size:2.2rem; font-weight:800; color:#92400E; margin:0.3rem 0;" id="profWalletDisplay">₹250</div>
+                        <p style="font-size:0.85rem; color:#78350F; margin:0 0 1rem 0;">Usable for 1-click meal orders and subscription payments.</p>
+                        <button onclick="openWalletTopupModal()" style="background:#D97706; color:white; border:none; padding:0.6rem 1.2rem; border-radius:8px; font-weight:700; cursor:pointer;">➕ Add Funds to Wallet</button>
+                    </div>
+
+                    <div style="background:var(--gray-100); border-radius:12px; padding:1.2rem;">
+                        <h4 style="font-weight:800; margin:0 0 0.3rem 0;">Invite Friends, Earn Meals!</h4>
+                        <p style="font-size:0.85rem; color:var(--gray-500); margin:0 0 0.8rem 0;">Give friends ₹50 off on their first order and get ₹100 added to your wallet automatically.</p>
+                        <div style="display:flex; gap:0.5rem;">
+                            <input type="text" value="TIFFIN-PRIYA50" readonly style="flex:1; padding:0.5rem; border:1px solid var(--gray-200); border-radius:6px; font-weight:700; font-family:monospace; background:white;">
+                            <button onclick="copyReferralCode('TIFFIN-PRIYA50')" style="background:var(--primary); color:white; border:none; padding:0.5rem 1rem; border-radius:6px; font-weight:700; cursor:pointer;">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CART DRAWER -->
+    <div class="cart-drawer-overlay" id="cartOverlay" onclick="toggleCartDrawer(false)"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h3>🛒 My Meal Basket (<span id="cartTotalItems">0</span>)</h3>
+            <button class="btn-close-cart" onclick="toggleCartDrawer(false)">&times;</button>
+        </div>
+
+        <div class="cart-items-body" id="cartItemsList">
+            <!-- Rendered by JS -->
+        </div>
+
+        <div class="cart-footer">
+            <div class="coupon-bar">
+                <input type="text" id="couponInput" placeholder="Try WELCOME50, TIFFIN20">
+                <button class="btn-apply-coupon" onclick="applyCouponCode()">Apply</button>
+            </div>
+            <div id="couponAppliedBadge" style="display:none; color:#065F46; font-size:0.82rem; font-weight:700; margin-bottom:0.6rem;"></div>
+
+            <div style="margin-bottom:0.8rem;">
+                <label style="display:block; font-size:0.82rem; font-weight:700; margin-bottom:0.25rem;">Delivery Slot</label>
+                <select id="cartDeliverySlot" style="width:100%; padding:0.5rem; border:1.5px solid var(--gray-200); border-radius:6px; font-size:0.85rem;">
+                    <option>Lunch (12:30 PM - 1:30 PM)</option>
+                    <option>Dinner (7:30 PM - 8:30 PM)</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:0.8rem;">
+                <label style="display:block; font-size:0.82rem; font-weight:700; margin-bottom:0.25rem;">Delivery Address *</label>
+                <input type="text" id="cartDeliveryAddress" placeholder="Flat / Street / Area" style="width:100%; padding:0.5rem; border:1.5px solid var(--gray-200); border-radius:6px; font-size:0.85rem; box-sizing:border-box;" required>
+            </div>
+
+            <div style="margin-bottom:0.8rem;">
+                <label style="display:block; font-size:0.82rem; font-weight:700; margin-bottom:0.25rem;">Payment Method</label>
+                <select id="cartPaymentMethod" style="width:100%; padding:0.5rem; border:1.5px solid var(--gray-200); border-radius:6px; font-size:0.85rem;">
+                    <option value="Cash on Delivery">💵 Cash on Delivery (COD)</option>
+                    <option value="Tiffin Wallet">💰 Pay with Tiffin Wallet Balance</option>
+                    <option value="UPI / Online Payment">📱 UPI / QR Code on Delivery</option>
+                </select>
+            </div>
+
+            <div class="bill-row">
+                <span>Item Total</span>
+                <span id="cartSubtotal">₹0</span>
+            </div>
+            <div class="bill-row">
+                <span>Insulated Packaging & Delivery</span>
+                <span style="color:#059669; font-weight:700;">FREE</span>
+            </div>
+            <div class="bill-row" id="cartDiscountRow" style="display:none; color:#059669;">
+                <span>Discount</span>
+                <span id="cartDiscountAmount">-₹0</span>
+            </div>
+            <div class="bill-row total">
+                <span>To Pay</span>
+                <span id="cartFinalTotal">₹0</span>
+            </div>
+
+            <button class="btn-checkout" id="btnPlaceOrder" onclick="executeCheckout()">
+                🛍️ Place Order
+            </button>
+        </div>
+    </div>
+
+    <!-- TAX INVOICE & RECEIPT MODAL -->
+    <div class="modal-popup" id="receiptModal">
+        <div class="modal-card-box" style="width: 580px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <h3 style="margin:0; font-size:1.2rem; font-weight:800; color:var(--dark);">📄 Order Tax Invoice & Receipt</h3>
+                <button onclick="closeReceiptModal()" style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--gray-500);">&times;</button>
+            </div>
+
+            <div id="printableReceiptArea">
+                <!-- Injected via JavaScript -->
+            </div>
+
+            <div style="display:flex; gap:0.6rem; margin-top:1.4rem; flex-wrap:wrap;">
+                <button onclick="triggerPrintReceipt()" class="btn-action-primary" style="flex:1; justify-content:center;">
+                    🖨️ Print Receipt
+                </button>
+                <button onclick="downloadReceiptTxt()" class="btn-action-secondary" style="flex:1; justify-content:center;">
+                    📥 Download Slip (.txt)
+                </button>
+                <button onclick="copyReceiptToClipboard()" class="btn-action-secondary" style="flex:1; justify-content:center;">
+                    📋 Copy Text
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- WALLET TOP-UP MODAL -->
+    <div class="modal-popup" id="walletTopupModal">
+        <div class="modal-card-box" style="width: 420px;">
+            <h3 style="font-size:1.3rem; font-weight:800; color:var(--dark); margin-top:0; margin-bottom:0.4rem;">💰 Top Up Tiffin Wallet</h3>
+            <p style="font-size:0.88rem; color:var(--gray-500); margin-bottom:1.2rem;">Add funds for instant 1-click checkouts with no payment gateway charges.</p>
+
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:0.6rem; margin-bottom:1.2rem;">
+                <button onclick="selectTopupAmount(200)" class="chip-btn" style="padding:0.7rem; text-align:center; font-weight:800; font-size:0.95rem;">+ ₹200</button>
+                <button onclick="selectTopupAmount(500)" class="chip-btn" style="padding:0.7rem; text-align:center; font-weight:800; font-size:0.95rem;">+ ₹500</button>
+                <button onclick="selectTopupAmount(1000)" class="chip-btn" style="padding:0.7rem; text-align:center; font-weight:800; font-size:0.95rem;">+ ₹1,000</button>
+            </div>
+
+            <div style="margin-bottom:1.2rem;">
+                <label style="display:block; font-weight:700; font-size:0.88rem; margin-bottom:0.4rem;">Or Enter Amount (₹)</label>
+                <input type="number" id="customWalletAmount" value="250" min="50" step="50" style="width:100%; padding:0.75rem; border:1.5px solid var(--gray-200); border-radius:8px; font-size:1rem; font-weight:700; box-sizing:border-box;">
+            </div>
+
+            <div style="display:flex; gap:0.8rem;">
+                <button onclick="executeWalletTopup()" style="flex:1; background:var(--secondary); color:white; border:none; padding:0.75rem; border-radius:8px; font-weight:700; cursor:pointer;">💳 Add Balance</button>
+                <button onclick="closeWalletTopupModal()" style="flex:1; background:var(--gray-200); color:var(--dark); border:none; padding:0.75rem; border-radius:8px; font-weight:700; cursor:pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REVIEW MODAL -->
+    <div class="modal-popup" id="reviewModal">
+        <div class="modal-card-box">
+            <h3 style="font-size:1.3rem; font-weight:800; color:var(--dark); margin:0 0 0.4rem 0;">⭐ Rate Your Tiffin Meal</h3>
+            <p style="font-size:0.88rem; color:var(--gray-500); margin:0;" id="reviewDishName">Deluxe North Indian Thali</p>
+
+            <div class="star-rating-row" id="starRatingContainer">
+                <span class="star-item selected" onclick="setRating(1)">★</span>
+                <span class="star-item selected" onclick="setRating(2)">★</span>
+                <span class="star-item selected" onclick="setRating(3)">★</span>
+                <span class="star-item selected" onclick="setRating(4)">★</span>
+                <span class="star-item selected" onclick="setRating(5)">★</span>
+            </div>
+
+            <div style="margin-bottom:1.2rem;">
+                <label style="display:block; font-weight:700; font-size:0.88rem; margin-bottom:0.4rem;">Share your honest feedback</label>
+                <textarea id="reviewCommentText" rows="3" placeholder="How was the taste, freshness, and warmth?" style="width:100%; padding:0.75rem; border:1.5px solid var(--gray-200); border-radius:8px; font-family:inherit; font-size:0.9rem; box-sizing:border-box;"></textarea>
+            </div>
+
+            <div style="display:flex; gap:0.8rem;">
+                <button onclick="submitOrderReview()" style="flex:1; background:var(--primary); color:white; border:none; padding:0.75rem; border-radius:8px; font-weight:700; cursor:pointer;">Submit Review</button>
+                <button onclick="closeReviewModal()" style="flex:1; background:var(--gray-200); color:var(--dark); border:none; padding:0.75rem; border-radius:8px; font-weight:700; cursor:pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING LIVE SUPPORT CHAT -->
+    <button class="chat-fab-btn" id="chatFabBtn" onclick="toggleSupportChat()">
+        <span>👨‍🍳</span> Chef Helpline
+    </button>
+
+    <div class="chat-drawer" id="chatDrawer">
+        <div class="chat-header">
+            <div style="display:flex; align-items:center; gap:0.6rem;">
+                <span style="font-size:1.4rem;">🍱</span>
+                <div>
+                    <strong style="font-size:0.95rem; display:block;">Chef Support Helpline • Live AI</strong>
+                    <span style="font-size:0.75rem; opacity:0.9; display:flex; align-items:center; gap:0.3rem;">
+                        <span style="width:6px; height:6px; background:#4ADE80; border-radius:50%; display:inline-block;"></span>
+                        Master Chef is online
+                    </span>
+                </div>
+            </div>
+            <button onclick="toggleSupportChat()" style="background:none; border:none; color:white; font-size:1.4rem; cursor:pointer; line-height:1; opacity:0.85;">&times;</button>
+        </div>
+
+        <!-- Quick Question Chips -->
+        <div class="chat-chips-bar" id="chatChipsBar">
+            <button class="chat-chip" onclick="askQuickPrompt('1')">🍱 1. Today's Menu</button>
+            <button class="chat-chip" onclick="askQuickPrompt('2')">⏰ 2. Delivery Slots</button>
+            <button class="chat-chip" onclick="askQuickPrompt('3')">📋 3. Subscriptions & Pause</button>
+            <button class="chat-chip" onclick="askQuickPrompt('4')">🌿 4. Jain & Pure Veg</button>
+            <button class="chat-chip" onclick="askQuickPrompt('5')">🎁 5. Promo Codes</button>
+            <button class="chat-chip" onclick="askQuickPrompt('6')">💳 6. Orders & Refunds</button>
+        </div>
+
+        <div class="chat-messages-box" id="chatMessagesBox">
+            <div class="chat-bubble bot">
+                <strong>Namaste! 🙏 I am your TiffinExpress Master Chef & Support Assistant.</strong><br><br>
+                Reply with a number (<strong>1–6</strong>) or ask any question about today's fresh thalis, ingredients, delivery timings, diet bowls, or subscription plans!
+            </div>
+        </div>
+
+        <div class="chat-input-bar">
+            <input type="text" id="chatUserMsg" placeholder="Enter number (1-6) or ask chef anything..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+            <button onclick="sendChatMessage()">
+                <span>Send</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div>
+    </div>
+
+
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // State
+        let allMenuItems = [];
+        let currentFilters = { day: 'All', category: 'All', search: '' };
+        let cart = []; // [{ itemName, price, quantity, image, notes }]
+        let appliedCoupon = null;
+        let selectedRatingValue = 5;
+        let activeReviewOrderId = null;
+        let currentLoadedOrders = [];
+        let activeViewingOrder = null;
+        let currentUserData = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserProfile();
+            loadMenuDishes();
+            loadCustomerOrders();
+            loadActiveSubscriptions();
+            calcSubscriptionPrice();
+
+            // Refresh orders periodically
+            setInterval(loadCustomerOrders, 12000);
+        });
+
+        // Toast Helper
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast-msg ${type}`;
+            toast.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Tab Switching
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+
+            if (btn) {
+                btn.classList.add('active');
+            } else {
+                const navBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick')?.includes(tabId));
+                if (navBtn) navBtn.classList.add('active');
+            }
+        }
+
+        // Auth header helper
+        function getAuthHeaders(extraHeaders = {}) {
+            const token = localStorage.getItem('tiffin_token') || localStorage.getItem('tiffin_user_email') || '';
+            const email = localStorage.getItem('tiffin_user_email') || '';
+            return {
+                'Authorization': token ? `Bearer ${token}` : '',
+                'X-User-Email': email,
+                ...extraHeaders
+            };
+        }
+
+        // User Profile
+        function loadUserProfile() {
+            const token = localStorage.getItem('tiffin_token') || localStorage.getItem('tiffin_user_email');
+            const storedEmail = localStorage.getItem('tiffin_user_email') || '';
+
+            if (!token && !storedEmail) {
+                window.location.href = 'login.html?error=Please%20log%20in%20to%20access%20your%20dashboard';
+                return;
+            }
+
+            fetch(`UserServlet?action=profile&userEmail=${encodeURIComponent(storedEmail)}`, {
+                credentials: 'include',
+                headers: getAuthHeaders({ 'Accept': 'application/json' })
+            })
+                .then(r => r.json())
+                .then(data => {
+                    if (!data || !data.loggedIn) {
+                        localStorage.removeItem('tiffin_token');
+                        localStorage.removeItem('tiffin_user_email');
+                        localStorage.removeItem('tiffin_user_name');
+                        localStorage.removeItem('tiffin_user_phone');
+                        window.location.href = 'login.html?error=Please%20log%20in%20to%20access%20your%20dashboard';
+                        return;
+                    }
+
+                    const profileData = data;
+                    currentUserData = profileData;
+                    localStorage.setItem('tiffin_token', profileData.email);
+                    localStorage.setItem('tiffin_user_email', profileData.email);
+                    localStorage.setItem('tiffin_user_name', profileData.name);
+                    localStorage.setItem('tiffin_user_phone', profileData.phone || '');
+
+                    document.getElementById('navUserName').textContent = `👤 ${profileData.name || 'Foodie'}`;
+                    document.getElementById('greetingHeading').textContent = `Welcome Back, ${profileData.name || 'Foodie'}! 👋`;
+                    document.getElementById('userWalletAmount').textContent = `₹${profileData.walletBalance ?? 0}`;
+                    document.getElementById('profWalletDisplay').textContent = `₹${profileData.walletBalance ?? 0}`;
+                    
+                    document.getElementById('profName').value = profileData.name || '';
+                    document.getElementById('profEmail').value = profileData.email || '';
+                    document.getElementById('profPhone').value = profileData.phone || '';
+                    document.getElementById('profAddress').value = profileData.address || '';
+                    if (document.getElementById('cartDeliveryAddress')) {
+                        document.getElementById('cartDeliveryAddress').value = profileData.address || '';
+                    }
+                })
+                .catch(err => {
+                    console.warn('Profile fetch note:', err);
+                });
+        }
+
+        function handleProfileUpdate(e) {
+            e.preventDefault();
+            const name = document.getElementById('profName').value;
+            const phone = document.getElementById('profPhone').value;
+            const address = document.getElementById('profAddress').value;
+
+            fetch('UserServlet', {
+                method: 'POST',
+                credentials: 'include',
+                headers: getAuthHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+                body: new URLSearchParams({ action: 'updateProfile', name, phone, address })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    showToast('Profile updated successfully!');
+                    loadUserProfile();
+                } else {
+                    showToast('Failed to update profile', 'error');
+                }
+            });
+        }
+
+        // Wallet Top-up
+        function openWalletTopupModal() {
+            document.getElementById('walletTopupModal').classList.add('open');
+        }
+        function closeWalletTopupModal() {
+            document.getElementById('walletTopupModal').classList.remove('open');
+        }
+        function selectTopupAmount(amt) {
+            document.getElementById('customWalletAmount').value = amt;
+        }
+        function executeWalletTopup() {
+            const amt = parseFloat(document.getElementById('customWalletAmount').value) || 0;
+            if (amt <= 0) {
+                showToast('Please enter a valid amount', 'error');
+                return;
+            }
+
+            fetch('UserServlet', {
+                method: 'POST',
+                credentials: 'include',
+                headers: getAuthHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+                body: new URLSearchParams({ action: 'addWalletMoney', amount: amt })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    showToast(`₹${amt} added to Tiffin Wallet! 🎉`);
+                    closeWalletTopupModal();
+                    loadUserProfile();
+                } else {
+                    showToast(res.error || 'Failed to add money', 'error');
+                }
+            });
+        }
+
+        // Menu Loading and Filtering
+        function loadMenuDishes() {
+            fetch('MenuServlet?action=get')
+                .then(r => r.json())
+                .then(data => {
+                    allMenuItems = data;
+                    renderDishes();
+                })
+                .catch(() => {
+                    document.getElementById('dishesGridContainer').innerHTML = `
+                        <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gray-500);">
+                            ⚠️ Failed to load menu. Please refresh.
+                        </div>
+                    `;
+                });
+        }
+
+        function filterMenu(type, value, btnEl) {
+            if (type === 'day') {
+                currentFilters.day = value;
+                if (btnEl) {
+                    document.querySelectorAll('#dayFilterChips .chip-btn').forEach(b => b.classList.remove('active'));
+                    btnEl.classList.add('active');
+                }
+            } else if (type === 'category') {
+                currentFilters.category = value;
+                if (btnEl) {
+                    document.querySelectorAll('#catFilterChips .chip-btn').forEach(b => b.classList.remove('active'));
+                    btnEl.classList.add('active');
+                }
+            } else if (type === 'search') {
+                currentFilters.search = value.toLowerCase().trim();
+            }
+            renderDishes();
+        }
+
+        function renderDishes() {
+            const container = document.getElementById('dishesGridContainer');
+            let filtered = allMenuItems.filter(item => {
+                const matchDay = currentFilters.day === 'All' || item.day === currentFilters.day || item.day === 'Daily';
+                const matchCat = currentFilters.category === 'All' || item.category === currentFilters.category;
+                const matchSearch = !currentFilters.search || 
+                    item.itemName.toLowerCase().includes(currentFilters.search) || 
+                    (item.description && item.description.toLowerCase().includes(currentFilters.search));
+                return matchDay && matchCat && matchSearch;
+            });
+
+            if (!filtered.length) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align:center; padding: 4rem 1rem; color: var(--gray-500);">
+                        <div style="font-size:3rem; margin-bottom:0.5rem;">🔍</div>
+                        <h3 style="font-size:1.2rem; color:var(--dark);">No dishes found for this filter</h3>
+                        <p style="font-size:0.88rem;">Try selecting "All Days" or clearing your search term.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(dish => {
+                const inCart = cart.find(c => c.itemName === dish.itemName);
+                const spiceDisplay = '🌶️'.repeat(dish.spiciness || 2);
+                
+                return `
+                    <div class="dish-card">
+                        <div class="dish-card-image-wrap">
+                            <img src="${dish.image || 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600&auto=format&fit=crop&q=80'}" alt="${dish.itemName}" loading="lazy">
+                            <span class="dish-day-tag">🗓️ ${dish.day}</span>
+                            <span class="dish-rating-tag">⭐ ${dish.rating || 4.8}</span>
+                        </div>
+                        <div class="dish-card-body">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+                                <span style="font-size:0.75rem; font-weight:700; color:var(--secondary); text-transform:uppercase;">${dish.category || 'Special'}</span>
+                                <span style="font-size:0.75rem;">${spiceDisplay}</span>
+                            </div>
+                            <h3 class="dish-card-title">${dish.itemName}</h3>
+                            <p class="dish-card-desc">${dish.description || 'Nutritious homestyle cooking made with fresh market ingredients.'}</p>
+                            
+                            <div class="nutrition-row">
+                                <span>🔥 ${dish.calories || 450} kcal</span>
+                                <span>•</span>
+                                <span>💪 ${dish.protein || 18}g Protein</span>
+                                <span>•</span>
+                                <span>🌱 Pure Veg</span>
+                            </div>
+
+                            <div class="dish-card-footer">
+                                <span class="dish-price">₹${dish.price}</span>
+                                ${inCart ? `
+                                    <div class="qty-controls">
+                                        <button class="qty-btn" onclick="updateItemQuantity('${escapeStr(dish.itemName)}', -1)">-</button>
+                                        <strong style="font-size:0.9rem; padding:0 0.4rem;">${inCart.quantity}</strong>
+                                        <button class="qty-btn" onclick="updateItemQuantity('${escapeStr(dish.itemName)}', 1)">+</button>
+                                    </div>
+                                ` : `
+                                    <button class="dish-action-btn" onclick="addToCart('${escapeStr(dish.itemName)}', ${dish.price}, '${escapeStr(dish.image)}')">
+                                        <span>+</span> Add to Meal
+                                    </button>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Cart Management
+        function toggleCartDrawer(open) {
+            const drawer = document.getElementById('cartDrawer');
+            const overlay = document.getElementById('cartOverlay');
+            if (open) {
+                renderCartDrawer();
+                drawer.classList.add('open');
+                overlay.classList.add('open');
+            } else {
+                drawer.classList.remove('open');
+                overlay.classList.remove('open');
+            }
+        }
+
+        function addToCart(itemName, price, image) {
+            const existing = cart.find(i => i.itemName === itemName);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ itemName, price, quantity: 1, image, notes: '' });
+            }
+            updateCartBadge();
+            renderDishes();
+            showToast(`Added ${itemName} to your basket!`);
+        }
+
+        function updateItemQuantity(itemName, delta) {
+            const index = cart.findIndex(i => i.itemName === itemName);
+            if (index > -1) {
+                cart[index].quantity += delta;
+                if (cart[index].quantity <= 0) {
+                    cart.splice(index, 1);
+                }
+            }
+            updateCartBadge();
+            renderDishes();
+            renderCartDrawer();
+        }
+
+        function updateCartBadge() {
+            const totalCount = cart.reduce((sum, i) => sum + i.quantity, 0);
+            document.getElementById('cartCountBadge').textContent = totalCount;
+            document.getElementById('cartTotalItems').textContent = totalCount;
+        }
+
+        function renderCartDrawer() {
+            const container = document.getElementById('cartItemsList');
+            if (!cart.length) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:3.5rem 1rem; color:var(--gray-500);">
+                        <div style="font-size:3.5rem; margin-bottom:0.8rem;">🧺</div>
+                        <h4 style="color:var(--dark); font-size:1.1rem; margin:0 0 0.3rem 0;">Your meal basket is empty</h4>
+                        <p style="font-size:0.85rem; margin:0;">Explore today's menu and add your favorite dishes!</p>
+                    </div>
+                `;
+                document.getElementById('cartSubtotal').textContent = '₹0';
+                document.getElementById('cartFinalTotal').textContent = '₹0';
+                document.getElementById('btnPlaceOrder').disabled = true;
+                return;
+            }
+
+            document.getElementById('btnPlaceOrder').disabled = false;
+            container.innerHTML = cart.map(item => `
+                <div class="cart-item-row">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.itemName}</div>
+                        <div class="cart-item-price">₹${item.price} each</div>
+                    </div>
+                    <div class="qty-controls">
+                        <button class="qty-btn" onclick="updateItemQuantity('${escapeStr(item.itemName)}', -1)">-</button>
+                        <strong style="font-size:0.9rem; padding:0 0.4rem;">${item.quantity}</strong>
+                        <button class="qty-btn" onclick="updateItemQuantity('${escapeStr(item.itemName)}', 1)">+</button>
+                    </div>
+                    <div style="font-weight:800; font-size:0.95rem; color:var(--dark); min-width:50px; text-align:right;">
+                        ₹${item.price * item.quantity}
+                    </div>
+                </div>
+            `).join('');
+
+            const subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+            document.getElementById('cartSubtotal').textContent = `₹${subtotal}`;
+
+            let discount = 0;
+            if (appliedCoupon) {
+                if (appliedCoupon.discountType === 'flat') {
+                    discount = Math.min(subtotal, appliedCoupon.value);
+                } else if (appliedCoupon.discountType === 'percent') {
+                    discount = Math.min(appliedCoupon.maxDiscount || 100, Math.round((subtotal * appliedCoupon.value) / 100));
+                }
+                document.getElementById('cartDiscountRow').style.display = 'flex';
+                document.getElementById('cartDiscountAmount').textContent = `-₹${discount}`;
+            } else {
+                document.getElementById('cartDiscountRow').style.display = 'none';
+            }
+
+            const finalTotal = Math.max(0, subtotal - discount);
+            document.getElementById('cartFinalTotal').textContent = `₹${finalTotal}`;
+        }
+
+        function applyCouponCode() {
+            const code = document.getElementById('couponInput').value.trim().toUpperCase();
+            if (!code) return;
+
+            fetch(`/api/coupon?code=${encodeURIComponent(code)}`)
+                .then(r => r.json())
+                .then(res => {
+                    if (res.valid) {
+                        appliedCoupon = res.coupon;
+                        document.getElementById('couponAppliedBadge').style.display = 'block';
+                        document.getElementById('couponAppliedBadge').textContent = `🎉 Promo applied: ${res.coupon.description}`;
+                        showToast(`Coupon ${code} applied successfully!`);
+                        renderCartDrawer();
+                    } else {
+                        showToast(res.message || 'Invalid coupon code', 'error');
+                    }
+                });
+        }
+
+        function executeCheckout() {
+            if (!cart.length) {
+                showToast('Your cart is empty', 'error');
+                return;
+            }
+
+            const deliveryAddress = document.getElementById('cartDeliveryAddress').value.trim();
+            const deliverySlot = document.getElementById('cartDeliverySlot').value;
+            const paymentMethod = document.getElementById('cartPaymentMethod').value;
+
+            if (!deliveryAddress) {
+                showToast('Please enter your delivery address', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btnPlaceOrder');
+            btn.disabled = true;
+            btn.textContent = 'Processing Order... ⏳';
+
+            const payload = {
+                action: 'place',
+                isAsync: true,
+                items: JSON.stringify(cart),
+                deliveryAddress,
+                deliverySlot,
+                couponCode: appliedCoupon ? document.getElementById('couponInput').value.trim() : '',
+                paymentMethod
+            };
+
+            fetch('OrdersServlet', {
+                method: 'POST',
+                credentials: 'include',
+                headers: getAuthHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+                body: new URLSearchParams(payload)
+            })
+            .then(r => r.json())
+            .then(res => {
+                btn.disabled = false;
+                btn.textContent = '🛍️ Place Order';
+                if (res.success) {
+                    cart = [];
+                    appliedCoupon = null;
+                    updateCartBadge();
+                    toggleCartDrawer(false);
+                    renderDishes();
+                    showToast(`Order #${res.order.id} placed successfully!`);
+                    switchTab('tabOrders');
+                    loadCustomerOrders();
+                    loadUserProfile();
+                } else {
+                    showToast(res.error || 'Failed to place order', 'error');
+                }
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.textContent = '🛍️ Place Order';
+                showToast('Network error while placing order', 'error');
+            });
+        }
+
+        // Customer Orders & Live Stepper
+        function loadCustomerOrders() {
+            const storedEmail = localStorage.getItem('tiffin_user_email') || '';
+            fetch(`OrdersServlet?action=view&userEmail=${encodeURIComponent(storedEmail)}`, {
+                credentials: 'include',
+                headers: getAuthHeaders({ 'Accept': 'application/json' })
+            })
+                .then(r => r.json())
+                .then(orders => {
+                    currentLoadedOrders = orders;
+                    const activeCount = orders.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled' && o.status !== 'Declined').length;
+                    document.getElementById('activeOrdersCount').textContent = activeCount;
+
+                    const container = document.getElementById('ordersListContainer');
+                    if (!orders.length) {
+                        container.innerHTML = `
+                            <div style="background:white; border-radius:var(--radius-md); text-align:center; padding:4rem 1rem; border:1px solid var(--gray-200);">
+                                <div style="font-size:3.5rem; margin-bottom:0.8rem;">📦</div>
+                                <h3 style="color:var(--dark); font-size:1.2rem; margin:0 0 0.3rem 0;">No orders placed yet</h3>
+                                <p style="color:var(--gray-500); font-size:0.9rem; margin:0;">Order hot homemade food from today's menu!</p>
+                                <button onclick="switchTab('tabMenu')" style="margin-top:1rem; background:var(--primary); color:white; border:none; padding:0.6rem 1.4rem; border-radius:8px; font-weight:700; cursor:pointer;">Browse Menu</button>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    container.innerHTML = orders.map(order => {
+                        const statusClass = `status-${(order.status || 'pending').toLowerCase().replace(/\s+/g, '-')}`;
+                        const isDelivered = order.status === 'Delivered';
+                        const isPending = order.status === 'Pending' || order.status === 'Accepted';
+
+                        // Stepper active index
+                        let stepIdx = 0;
+                        if (order.status === 'Preparing') stepIdx = 1;
+                        if (order.status === 'Out for Delivery') stepIdx = 2;
+                        if (order.status === 'Delivered') stepIdx = 3;
+
+                        return `
+                            <div class="order-card">
+                                <div class="order-card-header">
+                                    <div>
+                                        <span class="order-id-block">Order #${order.id}</span>
+                                        <div class="order-time-tag">🕒 ${new Date(order.date).toLocaleDateString('en-IN', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' })}</div>
+                                    </div>
+                                    <div class="order-status-pill ${statusClass}">
+                                        ${order.status}
+                                    </div>
+                                </div>
+
+                                <!-- Stepper for Active Deliveries -->
+                                ${order.status !== 'Declined' && order.status !== 'Cancelled' ? `
+                                    <div class="tracking-stepper">
+                                        <div class="step-item ${stepIdx >= 0 ? (stepIdx === 0 ? 'active' : 'completed') : ''}">
+                                            <div class="step-dot">✓</div>
+                                            <div class="step-label">Order Placed</div>
+                                        </div>
+                                        <div class="step-item ${stepIdx >= 1 ? (stepIdx === 1 ? 'active' : 'completed') : ''}">
+                                            <div class="step-dot">🍳</div>
+                                            <div class="step-label">Kitchen Cooking</div>
+                                        </div>
+                                        <div class="step-item ${stepIdx >= 2 ? (stepIdx === 2 ? 'active' : 'completed') : ''}">
+                                            <div class="step-dot">🚚</div>
+                                            <div class="step-label">Out for Delivery</div>
+                                        </div>
+                                        <div class="step-item ${stepIdx >= 3 ? 'active completed' : ''}">
+                                            <div class="step-dot">🎁</div>
+                                            <div class="step-label">Delivered</div>
+                                        </div>
+                                    </div>
+                                ` : ''}
+
+                                <div class="order-details-grid">
+                                    <div>
+                                        <div style="font-weight:700; color:var(--dark); margin-bottom:0.4rem;">Dish Items</div>
+                                        <div style="font-size:0.92rem; color:var(--dark); font-weight:600;">
+                                            ${order.itemName}
+                                        </div>
+                                        <div class="order-meta-info" style="margin-top:0.6rem;">
+                                            📍 Delivery: ${order.deliveryAddress}<br>
+                                            ⏰ Slot: ${order.deliverySlot || 'Lunch (12:30 PM - 1:30 PM)'}
+                                        </div>
+                                    </div>
+
+                                    <div style="border-left:1px solid var(--gray-200); padding-left:1rem;">
+                                        <div style="font-size:0.8rem; color:var(--gray-500); font-weight:600;">Payment & Bill</div>
+                                        <div style="font-size:1.3rem; font-weight:800; color:var(--primary); margin:0.2rem 0;">
+                                            ₹${order.totalAmount || order.price || 90}
+                                        </div>
+                                        <div style="font-size:0.82rem; color:var(--gray-700);">
+                                            💵 ${order.paymentMethod || 'Cash on Delivery'}
+                                        </div>
+                                        ${order.discountAmount > 0 ? `<div style="font-size:0.78rem; color:#059669; font-weight:700;">Saved ₹${order.discountAmount} (${order.couponCode})</div>` : ''}
+                                    </div>
+                                </div>
+
+                                <div class="order-card-actions">
+                                    <button class="btn-action-primary" onclick="openReceiptModal(${order.id})">
+                                        📄 Print / View Receipt
+                                    </button>
+
+                                    ${isPending ? `
+                                        <button class="btn-outline-danger" onclick="cancelOrder(${order.id})">❌ Cancel Order</button>
+                                    ` : ''}
+
+                                    ${isDelivered ? `
+                                        ${order.rating ? `
+                                            <span style="font-size:0.85rem; font-weight:700; color:#B45309;">⭐ Rated ${order.rating}/5 stars</span>
+                                        ` : `
+                                            <button class="btn-action-secondary" onclick="openReviewModal(${order.id}, '${escapeStr(order.itemName)}')">⭐ Rate Meal & Chef</button>
+                                        `}
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                });
+        }
+
+        // ==========================================
+        // RECEIPT & TAX INVOICE SYSTEM
+        // ==========================================
+        function openReceiptModal(orderId) {
+            const order = currentLoadedOrders.find(o => o.id === orderId);
+            if (!order) return;
+            activeViewingOrder = order;
+
+            const invoiceNo = `INV-TE-${order.id}-${new Date(order.date).getFullYear()}`;
+            const subtotal = order.rawTotal || order.totalAmount + (order.discountAmount || 0);
+            const discount = order.discountAmount || 0;
+            const finalTotal = order.totalAmount;
+            const itemsList = order.items && order.items.length ? order.items : [{ itemName: order.itemName, quantity: 1, price: subtotal }];
+
+            const container = document.getElementById('printableReceiptArea');
+            container.innerHTML = `
+                <div class="receipt-card">
+                    <div class="receipt-header">
+                        <div class="receipt-logo">🍱 TIFFIN EXPRESS</div>
+                        <div style="font-size:0.85rem; font-weight:700; color:#1E293B;">Authentic Homestyle Tiffin & Meal Service</div>
+                        <div class="receipt-sub">FSSAI Lic No: 11223344005588 • GSTIN: 29AABCU9603R1ZM</div>
+                        <div class="receipt-sub">Support: mahajanpramod442@gmail.com | +91 87675 75963</div>
+                    </div>
+
+                    <div class="receipt-meta-grid">
+                        <div>
+                            <strong>Invoice No:</strong> ${invoiceNo}<br>
+                            <strong>Order ID:</strong> #${order.id}<br>
+                            <strong>Date & Time:</strong> ${new Date(order.date).toLocaleString('en-IN', { dateStyle:'medium', timeStyle:'short' })}
+                        </div>
+                        <div>
+                            <strong>Customer:</strong> ${order.customerName || 'Pramod Mahajan'}<br>
+                            <strong>Phone:</strong> ${order.customerPhone || '8767575963'}<br>
+                            <strong>Slot:</strong> ${order.deliverySlot || 'Lunch (12:30 PM)'}
+                        </div>
+                        <div style="grid-column: 1/-1; border-top: 1px dashed #E2E8F0; padding-top: 0.4rem;">
+                            <strong>Delivery Address:</strong> ${order.deliveryAddress}
+                        </div>
+                    </div>
+
+                    <table class="receipt-table">
+                        <thead>
+                            <tr>
+                                <th>Item Description</th>
+                                <th style="text-align:center;">Qty</th>
+                                <th style="text-align:right;">Price</th>
+                                <th style="text-align:right;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsList.map(it => `
+                                <tr>
+                                    <td>
+                                        <div style="font-weight:700;">${it.itemName}</div>
+                                        ${it.notes ? `<div style="font-size:0.75rem; color:#D97706;">Note: ${it.notes}</div>` : ''}
+                                    </td>
+                                    <td style="text-align:center; font-weight:700;">${it.quantity || 1}</td>
+                                    <td style="text-align:right;">₹${it.price}</td>
+                                    <td style="text-align:right; font-weight:700;">₹${(it.price * (it.quantity || 1))}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                    <div class="receipt-totals-box">
+                        <div class="receipt-total-row">
+                            <span>Item Subtotal:</span>
+                            <span>₹${subtotal}</span>
+                        </div>
+                        ${discount > 0 ? `
+                            <div class="receipt-total-row" style="color:#059669; font-weight:700;">
+                                <span>Coupon Savings (${order.couponCode || 'PROMO'}):</span>
+                                <span>-₹${discount}</span>
+                            </div>
+                        ` : ''}
+                        <div class="receipt-total-row">
+                            <span>Insulated Hot Packaging:</span>
+                            <span style="color:#059669; font-weight:700;">FREE (₹0)</span>
+                        </div>
+                        <div class="receipt-total-row">
+                            <span>Delivery Charges:</span>
+                            <span style="color:#059669; font-weight:700;">FREE (₹0)</span>
+                        </div>
+                        <div class="receipt-total-row">
+                            <span>Applicable Taxes (GST 5% included):</span>
+                            <span>₹${Math.round(finalTotal * 0.05)}</span>
+                        </div>
+                        <div class="receipt-grand-total">
+                            <span>Net Total Payable:</span>
+                            <span style="color:#FF6B35;">₹${finalTotal}</span>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem;">
+                        <div class="receipt-stamp">
+                            ✓ ${order.status.toUpperCase()}
+                        </div>
+                        <div style="font-size:0.8rem; color:#64748B; text-align:right;">
+                            Payment: <strong>${order.paymentMethod || 'Cash on Delivery'}</strong>
+                        </div>
+                    </div>
+
+                    <div style="text-align:center; font-size:0.75rem; color:#94A3B8; margin-top:0.8rem; border-top:1px dashed #E2E8F0; padding-top:0.6rem;">
+                        Thank you for ordering with TiffinExpress! Fresh homestyle food prepared with care & love.
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('receiptModal').classList.add('open');
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receiptModal').classList.remove('open');
+        }
+
+        function triggerPrintReceipt() {
+            if (!activeViewingOrder) return;
+            
+            // Build standalone printable document in popup or iframe safe
+            const receiptHtml = document.getElementById('printableReceiptArea').innerHTML;
+            const printWin = window.open('', '_blank', 'width=650,height=750');
+            if (printWin) {
+                printWin.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Receipt - Order #${activeViewingOrder.id}</title>
+                        <style>
+                            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; margin: 20px; color: #1E293B; }
+                            .receipt-card { border: 1px solid #CBD5E1; padding: 20px; border-radius: 8px; }
+                            .receipt-header { text-align: center; border-bottom: 2px dashed #CBD5E1; padding-bottom: 15px; margin-bottom: 15px; }
+                            .receipt-logo { font-size: 24px; font-weight: 800; color: #FF6B35; }
+                            .receipt-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; margin-bottom: 15px; background: #F8FAFC; padding: 12px; }
+                            .receipt-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 15px; }
+                            .receipt-table th { border-bottom: 2px solid #CBD5E1; padding: 6px 0; text-align: left; }
+                            .receipt-table td { padding: 8px 0; border-bottom: 1px solid #E2E8F0; }
+                            .receipt-totals-box { border-top: 2px dashed #CBD5E1; padding-top: 10px; font-size: 14px; }
+                            .receipt-total-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+                            .receipt-grand-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; border-top: 1px solid #000; padding-top: 8px; margin-top: 8px; }
+                            .receipt-stamp { display: inline-block; padding: 4px 10px; border: 2px solid #059669; color: #059669; font-weight: bold; font-size: 12px; }
+                        </style>
+                    </head>
+                    <body>
+                        ${receiptHtml}
+                        <script>
+                            window.onload = function() { window.print(); }
+                        <\/script>
+                    </body>
+                    </html>
+                `);
+                printWin.document.close();
+            } else {
+                window.print();
+            }
+        }
+
+        function downloadReceiptTxt() {
+            if (!activeViewingOrder) return;
+            const o = activeViewingOrder;
+            const invoiceNo = `INV-TE-${o.id}-${new Date(o.date).getFullYear()}`;
+
+            let txt = `=========================================\n`;
+            txt += `         🍱 TIFFIN EXPRESS RECEIPT       \n`;
+            txt += `      Homestyle Meal & Catering Service \n`;
+            txt += `=========================================\n`;
+            txt += `Invoice No : ${invoiceNo}\n`;
+            txt += `Order ID   : #${o.id}\n`;
+            txt += `Date & Time: ${new Date(o.date).toLocaleString()}\n`;
+            txt += `Customer   : ${o.customerName || 'Customer'}\n`;
+            txt += `Phone      : ${o.customerPhone || 'N/A'}\n`;
+            txt += `Address    : ${o.deliveryAddress}\n`;
+            txt += `Slot       : ${o.deliverySlot || 'Lunch'}\n`;
+            txt += `-----------------------------------------\n`;
+            txt += `ITEMS ORDERED:\n`;
+            if (o.items && o.items.length) {
+                o.items.forEach(it => {
+                    txt += ` - ${it.quantity}x ${it.itemName} @ ₹${it.price} = ₹${it.price * it.quantity}\n`;
+                });
+            } else {
+                txt += ` - 1x ${o.itemName} = ₹${o.totalAmount}\n`;
+            }
+            txt += `-----------------------------------------\n`;
+            txt += `Subtotal   : ₹${o.rawTotal || o.totalAmount}\n`;
+            if (o.discountAmount > 0) {
+                txt += `Discount   : -₹${o.discountAmount} (${o.couponCode || 'PROMO'})\n`;
+            }
+            txt += `Delivery   : FREE (₹0)\n`;
+            txt += `NET TOTAL  : ₹${o.totalAmount}\n`;
+            txt += `Payment    : ${o.paymentMethod || 'COD'}\n`;
+            txt += `Status     : ${o.status.toUpperCase()}\n`;
+            txt += `=========================================\n`;
+            txt += `Thank you for choosing TiffinExpress!\n`;
+
+            const blob = new Blob([txt], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `TiffinExpress_Receipt_Order_${o.id}.txt`);
+            a.click();
+            showToast('Receipt slip downloaded! 📥');
+        }
+
+        function copyReceiptToClipboard() {
+            if (!activeViewingOrder) return;
+            const o = activeViewingOrder;
+            const summary = `🍱 TiffinExpress Receipt: Order #${o.id} | ${o.itemName} | Total: ₹${o.totalAmount} | Slot: ${o.deliverySlot} | Status: ${o.status}`;
+            navigator.clipboard.writeText(summary).then(() => {
+                showToast('Receipt summary copied to clipboard! 📋');
+            });
+        }
+
+        function cancelOrder(orderId) {
+            fetch('OrdersServlet', {
+                method: 'POST',
+                credentials: 'include',
+                headers: getAuthHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+                body: new URLSearchParams({ action: 'cancel', orderId })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    showToast('Order cancelled. Refund added to Tiffin Wallet!');
+                    loadCustomerOrders();
+                    loadUserProfile();
+                } else {
+                    showToast(res.error || 'Failed to cancel order', 'error');
+                }
+            });
+        }
+
+        // Review Modal
+        function openReviewModal(orderId, dishName) {
+            activeReviewOrderId = orderId;
+            document.getElementById('reviewDishName').textContent = dishName;
+            document.getElementById('reviewCommentText').value = '';
+            setRating(5);
+            document.getElementById('reviewModal').classList.add('open');
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.remove('open');
+        }
+
+        function setRating(val) {
+            selectedRatingValue = val;
+            const stars = document.querySelectorAll('#starRatingContainer .star-item');
+            stars.forEach((s, idx) => {
+                if (idx < val) s.classList.add('selected');
+                else s.classList.remove('selected');
+            });
+        }
+
+        function submitOrderReview() {
+            if (!activeReviewOrderId) return;
+            const comment = document.getElementById('reviewCommentText').value.trim();
+
+            fetch('OrdersServlet', {
+                method: 'POST',
+                credentials: 'include',
+                headers: getAuthHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+                body: new URLSearchParams({
+                    action: 'rate',
+                    orderId: activeReviewOrderId,
+                    rating: selectedRatingValue,
+                    review: comment
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    closeReviewModal();
+                    showToast('Thank you for your rating! ⭐');
+                    loadCustomerOrders();
+                } else {
+                    showToast('Failed to submit review', 'error');
+                }
+            });
+        }
+
+        // Subscriptions
+        function calcSubscriptionPrice() {
+            const plan = document.querySelector('input[name="subPlan"]:checked')?.value || '30-Day';
+            const meals = document.querySelector('input[name="subMeals"]:checked')?.value || 'Lunch & Dinner';
+
+            let totalMeals = 30;
+            if (plan.includes('30-Day')) {
+                totalMeals = meals.includes('&') ? 60 : 30;
+            } else {
+                totalMeals = meals.includes('&') ? 14 : 7;
+            }
+
+            const perMeal = 50;
+            const totalPrice = totalMeals * perMeal;
+
+            document.getElementById('subTotalMealsText').textContent = `${totalMeals} Meals`;
+            document.getElementById('subPriceDisplay').textContent = `₹${totalPrice.toLocaleString('en-IN')}`;
+            document.getElementById('subPerMealDisplay').textContent = `Just ₹${perMeal} / wholesome homestyle meal`;
+        }
+
+        function confirmSubscriptionPlan() {
+            const planType = document.querySelector('input[name="subPlan"]:checked')?.value;
+            const mealsPerDay = document.querySelector('input[name="subMeals"]:checked')?.value;
+            const dietary = document.querySelector('input[name="subDiet"]:checked')?.value;
+
+            fetch('SubscriptionServlet', {
+                method: 'POST',
+                credentials: 'include',
+                headers: getAuthHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+                body: new URLSearchParams({ action: 'create', planType, mealsPerDay, dietary })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    showToast('Subscription plan activated! 🎉');
+                    loadActiveSubscriptions();
+                }
+            });
+        }
+
+        function loadActiveSubscriptions() {
+            const storedEmail = localStorage.getItem('tiffin_user_email') || '';
+            fetch(`SubscriptionServlet?userEmail=${encodeURIComponent(storedEmail)}`, {
+                credentials: 'include',
+                headers: getAuthHeaders({ 'Accept': 'application/json' })
+            })
+                .then(r => r.json())
+                .then(subs => {
+                    const container = document.getElementById('activeSubsContainer');
+                    if (!subs.length) {
+                        container.innerHTML = '';
+                        return;
+                    }
+
+                    container.innerHTML = `
+                        <h3 style="font-size:1.2rem; font-weight:800; color:var(--dark); margin:2rem 0 1rem 0;">Your Active Tiffin Subscriptions</h3>
+                        <div style="display:grid; gap:1rem;">
+                            ${subs.map(sub => `
+                                <div style="background:white; border-radius:var(--radius-md); padding:1.5rem; border:1px solid var(--gray-200); box-shadow:var(--shadow-sm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+                                    <div>
+                                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                                            <span style="font-weight:800; font-size:1.1rem; color:var(--dark);">${sub.planType}</span>
+                                            <span style="background:${sub.status === 'Active' ? '#D1FAE5' : '#FEF3C7'}; color:${sub.status === 'Active' ? '#065F46' : '#92400E'}; padding:0.2rem 0.6rem; border-radius:20px; font-size:0.75rem; font-weight:700;">${sub.status}</span>
+                                        </div>
+                                        <div style="font-size:0.88rem; color:var(--gray-500); margin-top:0.3rem;">
+                                            ${sub.mealsPerDay} • ${sub.dietary} • ${sub.deliveredMeals}/${sub.totalMeals} Meals Consumed
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button onclick="togglePauseSub('${sub.id}')" style="background:${sub.status === 'Active' ? '#FFFBEB' : '#E8F5E9'}; border:1px solid ${sub.status === 'Active' ? '#FDE68A' : '#A7F3D0'}; color:${sub.status === 'Active' ? '#B45309' : '#065F46'}; padding:0.5rem 1rem; border-radius:8px; font-weight:700; cursor:pointer;">
+                                            ${sub.status === 'Active' ? '⏸️ Pause Plan' : '▶️ Resume Plan'}
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                });
+        }
+
+        function togglePauseSub(subId) {
+            fetch('SubscriptionServlet', {
+                method: 'POST',
+                credentials: 'include',
+                headers: getAuthHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+                body: new URLSearchParams({ action: 'pause', subId })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    showToast(`Subscription ${res.subscription.status}`);
+                    loadActiveSubscriptions();
+                }
+            });
+        }
+
+        function copyReferralCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('Referral code copied to clipboard!');
+            });
+        }
+
+        // Live Support Chat (AI-Powered + Advanced Expert Brain)
+        function toggleSupportChat() {
+            const drawer = document.getElementById('chatDrawer');
+            drawer.classList.toggle('open');
+            if (drawer.classList.contains('open')) {
+                setTimeout(() => {
+                    document.getElementById('chatUserMsg').focus();
+                }, 150);
+            }
+        }
+
+        function askQuickPrompt(promptText) {
+            const input = document.getElementById('chatUserMsg');
+            input.value = promptText;
+            sendChatMessage();
+        }
+
+        function formatChatReply(text) {
+            if (!text) return '';
+            // Basic HTML escape first
+            let safe = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+
+            // Bold **text** -> <strong>text</strong>
+            safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // Italic *text* -> <em>text</em>
+            safe = safe.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+            // Line breaks
+            safe = safe.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+
+            return safe;
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatUserMsg');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const box = document.getElementById('chatMessagesBox');
+            
+            // Add user bubble
+            const userEl = document.createElement('div');
+            userEl.className = 'chat-bubble user';
+            userEl.textContent = msg;
+            box.appendChild(userEl);
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
+
+            // Add typing indicator
+            const typingEl = document.createElement('div');
+            typingEl.className = 'chat-typing-indicator';
+            typingEl.id = 'chatTypingInd';
+            typingEl.innerHTML = `
+                <div class="typing-dots">
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                </div>
+                <span>Master Chef is preparing reply...</span>
+            `;
+            box.appendChild(typingEl);
+            box.scrollTop = box.scrollHeight;
+
+            fetch('/api/supportChat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg })
+            })
+            .then(r => r.json())
+            .then(res => {
+                const ind = document.getElementById('chatTypingInd');
+                if (ind) ind.remove();
+
+                const botEl = document.createElement('div');
+                botEl.className = 'chat-bubble bot';
+                botEl.innerHTML = formatChatReply(res.reply || 'Thanks for reaching out! Our team is here to help with your meals.');
+                box.appendChild(botEl);
+                box.scrollTop = box.scrollHeight;
+            })
+            .catch(() => {
+                const ind = document.getElementById('chatTypingInd');
+                if (ind) ind.remove();
+
+                const botEl = document.createElement('div');
+                botEl.className = 'chat-bubble bot';
+                botEl.innerHTML = `<strong>Namaste! 🙏</strong><br>We deliver lunch between <strong>12:30 PM – 1:30 PM</strong> and dinner between <strong>7:30 PM – 8:30 PM</strong> fresh in insulated boxes. How else can I assist you?`;
+                box.appendChild(botEl);
+                box.scrollTop = box.scrollHeight;
+            });
+        }
+
+
+        // Seamless Logout
+        function logoutUser() {
+            showToast('Logging out... See you soon! 👋');
+            localStorage.removeItem('tiffin_user_email');
+            localStorage.removeItem('tiffin_user_name');
+            localStorage.removeItem('tiffin_user_phone');
+            fetch('UserServlet?action=logout')
+                .then(() => {
+                    setTimeout(() => {
+                        window.location.href = 'login.html?success=Logged%20out%20successfully';
+                    }, 300);
+                })
+                .catch(() => {
+                    window.location.href = 'login.html?success=Logged%20out%20successfully';
+                });
+        }
+
+        function escapeStr(str) {
+            if (!str) return '';
+            return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+    </script>
+</body>
+</html>

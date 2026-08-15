@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen & Admin Operations - TiffinExpress</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --admin-green: #1B4332;
+            --admin-green-light: #2D6A4F;
+            --admin-accent: #FF6B35;
+            --bg-canvas: #F1F5F9;
+            --card-bg: #FFFFFF;
+            --border-color: #E2E8F0;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --radius: 12px;
+        }
+
+        body {
+            background: var(--bg-canvas);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* ADMIN NAVBAR */
+        .admin-nav {
+            background: linear-gradient(135deg, var(--admin-green), var(--admin-green-light));
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .admin-nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+        .admin-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .live-kitchen-pill {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(4px);
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10B981;
+            box-shadow: 0 0 8px #10B981;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.3); }
+        }
+        .btn-admin-logout {
+            background: rgba(255,255,255,0.9);
+            color: var(--admin-green);
+            border: none;
+            padding: 0.45rem 1.1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-admin-logout:hover {
+            background: white;
+            transform: translateY(-1px);
+        }
+
+        /* MAIN LAYOUT */
+        .admin-container {
+            max-width: 1440px;
+            margin: 1.8rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* KPI METRICS BAR */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
+        }
+        .kpi-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.2rem 1.4rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .kpi-icon.revenue { background: #ECFDF5; color: #059669; }
+        .kpi-icon.pending { background: #FFFBEB; color: #D97706; }
+        .kpi-icon.kitchen { background: #EEF2FF; color: #4F46E5; }
+        .kpi-icon.transit { background: #EFF6FF; color: #2563EB; }
+        .kpi-icon.done    { background: #F0FDF4; color: #16A34A; }
+        .kpi-val { font-size: 1.6rem; font-weight: 800; line-height: 1.1; }
+        .kpi-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: 0.2rem; }
+
+        /* SPLIT SECTION */
+        .split-grid {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 1.8rem;
+        }
+
+        .panel-card {
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+        .panel-header {
+            padding: 1.1rem 1.4rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .panel-header h2 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ADD MENU FORM */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.35rem;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--admin-green-light);
+        }
+
+        .photo-picker-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+        }
+        .photo-choice-btn {
+            border: 2px solid transparent;
+            border-radius: 6px;
+            overflow: hidden;
+            height: 52px;
+            cursor: pointer;
+            padding: 0;
+            background: #E2E8F0;
+        }
+        .photo-choice-btn.selected {
+            border-color: var(--admin-accent);
+        }
+        .photo-choice-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .btn-add-dish {
+            background: var(--admin-green-light);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-add-dish:hover {
+            background: var(--admin-green);
+        }
+
+        /* ORDERS FILTER BAR */
+        .orders-nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1.4rem;
+            background: #F8FAFC;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .order-filter-tabs {
+            display: flex;
+            gap: 0.4rem;
+        }
+        .order-tab-btn {
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 0.35rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+        .order-tab-btn.active {
+            background: var(--admin-green-light);
+            color: white;
+            border-color: var(--admin-green-light);
+        }
+        .search-order-input {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            width: 200px;
+        }
+
+        /* TABLE */
+        .orders-table-wrapper {
+            overflow-x: auto;
+        }
+        table.admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+        table.admin-table thead th {
+            background: #F8FAFC;
+            padding: 0.85rem 1rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-color);
+        }
+        table.admin-table tbody td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        table.admin-table tbody tr:hover {
+            background: #F8FAFC;
+        }
+
+        .badge-status {
+            padding: 0.25rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: inline-block;
+        }
+        .badge-pending   { background: #FEF3C7; color: #92400E; }
+        .badge-preparing { background: #E0E7FF; color: #3730A3; }
+        .badge-out       { background: #DBEAFE; color: #1E40AF; }
+        .badge-delivered { background: #D1FAE5; color: #065F46; }
+        .badge-declined, .badge-cancelled { background: #FEE2E2; color: #991B1B; }
+
+        .action-cell-btns {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+        .btn-status-act {
+            border: none;
+            padding: 0.35rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-act-cook { background: #4F46E5; color: white; }
+        .btn-act-dispatch { background: #2563EB; color: white; }
+        .btn-act-delivered { background: #16A34A; color: white; }
+        .btn-act-decline { background: #EF4444; color: white; }
+        .btn-act-kot { background: #F1F5F9; border: 1px solid #CBD5E1; color: var(--text-main); }
+
+        /* MENU LIST ITEMS */
+        .menu-list-items {
+            max-height: 480px;
+            overflow-y: auto;
+            padding: 1rem;
+            display: grid;
+            gap: 0.8rem;
+        }
+        .menu-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.7rem;
+            gap: 0.8rem;
+        }
+        .menu-item-thumb {
+            width: 48px;
+            height: 48px;
+            border-radius: 6px;
+            object-fit: cover;
+            background: #FFE5DC;
+        }
+        .btn-stock-toggle {
+            background: #ECFDF5;
+            color: #065F46;
+            border: 1px solid #A7F3D0;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .btn-stock-toggle.out {
+            background: #FEE2E2;
+            color: #991B1B;
+            border-color: #FECACA;
+        }
+
+        /* PRINT KOT MODAL */
+        .kot-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+        .kot-modal.open { display: flex; }
+        .kot-slip {
+            background: white;
+            width: 380px;
+            padding: 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            font-family: monospace;
+        }
+
+        @media (max-width: 1024px) {
+            .split-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAV -->
+    <div class="admin-nav">
+        <div class="admin-nav-logo">
+            <span>🛡️</span>
+            <span>TiffinExpress Kitchen Manager</span>
+        </div>
+        <div class="admin-nav-right">
+            <div class="live-kitchen-pill">
+                <span class="live-dot"></span>
+                <span>Live Kitchen Stream</span>
+            </div>
+            <button class="btn-admin-logout" onclick="adminLogout()">Logout</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="admin-container">
+
+        <!-- KPI METRICS -->
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-icon revenue">💵</div>
+                <div>
+                    <div class="kpi-val" id="statRevenue">₹0</div>
+                    <div class="kpi-label">Today's Revenue</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon pending">⏳</div>
+                <div>
+                    <div class="kpi-val" id="statPending">0</div>
+                    <div class="kpi-label">Pending Approval</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon kitchen">🍳</div>
+                <div>
+                    <div class="kpi-val" id="statKitchen">0</div>
+                    <div class="kpi-label">In Kitchen Cooking</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon transit">🚚</div>
+                <div>
+                    <div class="kpi-val" id="statTransit">0</div>
+                    <div class="kpi-label">Out for Delivery</div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon done">✅</div>
+                <div>
+                    <div class="kpi-val" id="statDelivered">0</div>
+                    <div class="kpi-label">Delivered Today</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SPLIT GRID -->
+        <div class="split-grid">
+
+            <!-- LEFT: MENU MANAGER -->
+            <div>
+                <!-- Add Menu Item -->
+                <div class="panel-card" style="margin-bottom: 1.5rem;">
+                    <div class="panel-header">
+                        <h2><span>➕</span> Add Dish to Menu</h2>
+                    </div>
+                    <div style="padding: 1.2rem;">
+                        <form id="adminAddDishForm" onsubmit="handleAddDish(event)">
+                            <div class="form-group">
+                                <label>Dish Name *</label>
+                                <input type="text" id="dishName" placeholder="e.g. Punjabi Dal Makhani Thali" required>
+                            </div>
+
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem;">
+                                <div class="form-group">
+                                    <label>Price (₹) *</label>
+                                    <input type="number" id="dishPrice" placeholder="95" min="10" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Available Day *</label>
+                                    <select id="dishDay" required>
+                                        <option value="Daily">Daily Special</option>
+                                        <option value="Monday">Monday</option>
+                                        <option value="Tuesday">Tuesday</option>
+                                        <option value="Wednesday">Wednesday</option>
+                                        <option value="Thursday">Thursday</option>
+                                        <option value="Friday">Friday</option>
+                                        <option value="Saturday">Saturday</option>
+                                        <option value="Sunday">Sunday</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem;">
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select id="dishCategory">
+                                        <option>North Indian</option>
+                                        <option>South Indian</option>
+                                        <option>Healthy & Diet</option>
+                                        <option>Regional Specials</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Calories (kcal)</label>
+                                    <input type="number" id="dishCalories" placeholder="480" value="480">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Ingredients / Description</label>
+                                <textarea id="dishDesc" rows="2" placeholder="Freshly made with wholesome spices, salad and rotis."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Gourmet Photo Preset</label>
+                                <input type="hidden" id="dishImageUrl" value="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&auto=format&fit=crop&q=80">
+                                <div class="photo-picker-row">
+                                    <button type="button" class="photo-choice-btn selected" onclick="pickPhotoPreset(this, 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&auto=format&fit=crop&q=80')">
+                                        <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=120&auto=format&fit=crop&q=80" alt="Thali">
+                                    </button>
+                                    <button type="button" class="photo-choice-btn" onclick="pickPhotoPreset(this, 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=600&auto=format&fit=crop&q=80')">
+                                        <img src="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=120&auto=format&fit=crop&q=80" alt="Paneer">
+                                    </button>
+                                    <button type="button" class="photo-choice-btn" onclick="pickPhotoPreset(this, 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&auto=format&fit=crop&q=80')">
+                                        <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=120&auto=format&fit=crop&q=80" alt="Biryani">
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-add-dish">➕ Add Dish to Live Menu</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Current Menu List -->
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h2><span>🍽️</span> Menu Items (<span id="menuCountBadge">0</span>)</h2>
+                        <button onclick="loadAdminMenu()" style="background:none;border:none;color:var(--admin-green-light);font-weight:700;cursor:pointer;">🔄</button>
+                    </div>
+                    <div class="menu-list-items" id="adminMenuList">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: LIVE ORDERS MANAGEMENT PIPELINE -->
+            <div>
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h2><span>📦</span> Kitchen Order Dispatch & Workflow</h2>
+                        <div style="display:flex; gap:0.5rem;">
+                            <button onclick="exportOrdersCSV()" style="background:#F1F5F9; border:1px solid #CBD5E1; padding:0.35rem 0.8rem; border-radius:6px; font-weight:700; font-size:0.8rem; cursor:pointer;">📥 Export CSV</button>
+                            <button onclick="loadAdminOrders()" style="background:#ECFDF5; border:1px solid #A7F3D0; color:#065F46; padding:0.35rem 0.8rem; border-radius:6px; font-weight:700; font-size:0.8rem; cursor:pointer;">🔄 Refresh</button>
+                        </div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="orders-nav-bar">
+                        <div class="order-filter-tabs">
+                            <button class="order-tab-btn active" onclick="filterOrderTable('All', this)">All</button>
+                            <button class="order-tab-btn" onclick="filterOrderTable('Pending', this)">Pending</button>
+                            <button class="order-tab-btn" onclick="filterOrderTable('Preparing', this)">In Kitchen</button>
+                            <button class="order-tab-btn" onclick="filterOrderTable('Out for Delivery', this)">On Way</button>
+                            <button class="order-tab-btn" onclick="filterOrderTable('Delivered', this)">Delivered</button>
+                        </div>
+                        <input type="text" class="search-order-input" id="orderSearchInput" placeholder="🔍 Search orders..." oninput="renderOrdersTable()">
+                    </div>
+
+                    <!-- Table -->
+                    <div class="orders-table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th># Order</th>
+                                    <th>Customer & Contact</th>
+                                    <th>Dishes & Notes</th>
+                                    <th>Slot & Address</th>
+                                    <th>Bill & Mode</th>
+                                    <th>Status</th>
+                                    <th>Advance Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminOrdersTbody">
+                                <tr><td colspan="7" style="text-align:center; padding:3rem; color:var(--text-muted);">Loading kitchen orders...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- KOT SLIP MODAL -->
+    <div class="kot-modal" id="kotModal" onclick="if(event.target===this) closeKotModal()">
+        <div class="kot-slip" id="kotContent">
+            <!-- Rendered by JS -->
+        </div>
+    </div>
+
+    <script>
+        let adminOrders = [];
+        let adminMenuItems = [];
+        let activeStatusFilter = 'All';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAdminStats();
+            loadAdminMenu();
+            loadAdminOrders();
+
+            setInterval(() => {
+                loadAdminStats();
+                loadAdminOrders();
+            }, 10000);
+        });
+
+        function loadAdminStats() {
+            fetch('AdminServlet?action=stats')
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('statRevenue').textContent = `₹${data.totalRevenue.toLocaleString('en-IN')}`;
+                    document.getElementById('statPending').textContent = data.pendingOrders;
+                    document.getElementById('statKitchen').textContent = data.preparingOrders;
+                    document.getElementById('statTransit').textContent = data.outOrders;
+                    document.getElementById('statDelivered').textContent = data.deliveredOrders;
+                });
+        }
+
+        function loadAdminMenu() {
+            fetch('MenuServlet?action=get')
+                .then(r => r.json())
+                .then(items => {
+                    adminMenuItems = items;
+                    document.getElementById('menuCountBadge').textContent = items.length;
+                    const container = document.getElementById('adminMenuList');
+                    
+                    container.innerHTML = items.map(item => `
+                        <div class="menu-item-row">
+                            <img src="${item.image || 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=100&auto=format&fit=crop&q=80'}" class="menu-item-thumb" alt="${item.itemName}">
+                            <div style="flex:1;">
+                                <div style="font-weight:700; font-size:0.9rem; color:var(--text-main);">${item.itemName}</div>
+                                <div style="font-size:0.78rem; color:var(--text-muted);">
+                                    ₹${item.price} • ${item.day} • ${item.category || 'North Indian'}
+                                </div>
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:0.3rem; align-items:flex-end;">
+                                <button class="btn-stock-toggle ${item.inStock !== false ? '' : 'out'}" onclick="toggleDishStock('${escapeStr(item.itemName)}')">
+                                    ${item.inStock !== false ? '🟢 In Stock' : '🔴 Sold Out'}
+                                </button>
+                                <button onclick="deleteDish('${escapeStr(item.itemName)}')" style="background:none; border:none; color:#EF4444; font-size:0.75rem; font-weight:700; cursor:pointer;">Delete</button>
+                            </div>
+                        </div>
+                    `).join('');
+                });
+        }
+
+        function toggleDishStock(itemName) {
+            fetch('MenuServlet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ action: 'toggleStock', itemName })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) loadAdminMenu();
+            });
+        }
+
+        function deleteDish(itemName) {
+            if (!confirm(`Are you sure you want to delete "${itemName}" from the menu?`)) return;
+            fetch('MenuServlet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ action: 'delete', itemName })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) loadAdminMenu();
+            });
+        }
+
+        function pickPhotoPreset(btn, url) {
+            document.querySelectorAll('.photo-choice-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            document.getElementById('dishImageUrl').value = url;
+        }
+
+        function handleAddDish(e) {
+            e.preventDefault();
+            const itemName = document.getElementById('dishName').value.trim();
+            const price = document.getElementById('dishPrice').value;
+            const day = document.getElementById('dishDay').value;
+            const category = document.getElementById('dishCategory').value;
+            const calories = document.getElementById('dishCalories').value;
+            const description = document.getElementById('dishDesc').value.trim();
+            const imageUrl = document.getElementById('dishImageUrl').value;
+
+            fetch('MenuServlet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    action: 'add',
+                    itemName,
+                    price,
+                    day,
+                    category,
+                    calories,
+                    description,
+                    imageUrl
+                })
+            })
+            .then(() => {
+                document.getElementById('adminAddDishForm').reset();
+                loadAdminMenu();
+                loadAdminStats();
+            });
+        }
+
+        // Orders management
+        function loadAdminOrders() {
+            fetch('OrdersServlet?action=viewAll')
+                .then(r => r.json())
+                .then(orders => {
+                    adminOrders = orders;
+                    renderOrdersTable();
+                });
+        }
+
+        function filterOrderTable(status, btn) {
+            activeStatusFilter = status;
+            document.querySelectorAll('.order-tab-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            renderOrdersTable();
+        }
+
+        function renderOrdersTable() {
+            const query = document.getElementById('orderSearchInput').value.toLowerCase().trim();
+            const tbody = document.getElementById('adminOrdersTbody');
+
+            const filtered = adminOrders.filter(order => {
+                const matchStatus = activeStatusFilter === 'All' || order.status === activeStatusFilter;
+                const matchQuery = !query || 
+                    String(order.id).includes(query) || 
+                    (order.customerName && order.customerName.toLowerCase().includes(query)) ||
+                    (order.itemName && order.itemName.toLowerCase().includes(query)) ||
+                    (order.deliveryAddress && order.deliveryAddress.toLowerCase().includes(query));
+                return matchStatus && matchQuery;
+            });
+
+            if (!filtered.length) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:3rem; color:var(--text-muted);">No orders matching filter.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(order => {
+                let badgeClass = 'badge-pending';
+                if (order.status === 'Preparing') badgeClass = 'badge-preparing';
+                if (order.status === 'Out for Delivery') badgeClass = 'badge-out';
+                if (order.status === 'Delivered') badgeClass = 'badge-delivered';
+                if (order.status === 'Declined' || order.status === 'Cancelled') badgeClass = 'badge-declined';
+
+                return `
+                    <tr>
+                        <td style="font-weight:800; color:var(--text-main);">#${order.id}</td>
+                        <td>
+                            <strong>${order.customerName || 'Pramod Mahajan'}</strong><br>
+                            <span style="font-size:0.8rem; color:var(--text-muted);">📞 ${order.customerPhone || '8767575963'}</span>
+                        </td>
+                        <td>
+                            <div style="font-weight:700; max-width:220px;">${order.itemName}</div>
+                            ${order.notes ? `<span style="font-size:0.75rem; color:#D97706; font-style:italic;">Note: ${order.notes}</span>` : ''}
+                        </td>
+                        <td>
+                            <div style="font-size:0.82rem; max-width:200px;">${order.deliveryAddress}</div>
+                            <span style="font-size:0.75rem; color:var(--admin-green-light); font-weight:700;">⏰ ${order.deliverySlot || 'Lunch Slot'}</span>
+                        </td>
+                        <td>
+                            <strong style="color:var(--admin-accent); font-size:1.05rem;">₹${order.totalAmount || 90}</strong><br>
+                            <span style="font-size:0.75rem; color:var(--text-muted);">${order.paymentMethod || 'COD'}</span>
+                        </td>
+                        <td>
+                            <span class="badge-status ${badgeClass}">${order.status}</span>
+                        </td>
+                        <td>
+                            <div class="action-cell-btns">
+                                ${order.status === 'Pending' ? `
+                                    <button class="btn-status-act btn-act-cook" onclick="advanceOrderStatus(${order.id}, 'Preparing')">🍳 Cook</button>
+                                    <button class="btn-status-act btn-act-decline" onclick="advanceOrderStatus(${order.id}, 'Declined')">✕</button>
+                                ` : ''}
+                                ${order.status === 'Preparing' ? `
+                                    <button class="btn-status-act btn-act-dispatch" onclick="advanceOrderStatus(${order.id}, 'Out for Delivery')">🚚 Dispatch</button>
+                                ` : ''}
+                                ${order.status === 'Out for Delivery' ? `
+                                    <button class="btn-status-act btn-act-delivered" onclick="advanceOrderStatus(${order.id}, 'Delivered')">✅ Deliver</button>
+                                ` : ''}
+                                <button class="btn-status-act btn-act-kot" onclick="printKitchenSlip(${order.id})">📄 KOT</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function advanceOrderStatus(orderId, newStatus) {
+            fetch('OrdersServlet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ action: 'updateStatus', orderId, status: newStatus })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    loadAdminOrders();
+                    loadAdminStats();
+                }
+            });
+        }
+
+        function printKitchenSlip(orderId) {
+            const order = adminOrders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const slip = document.getElementById('kotContent');
+            slip.innerHTML = `
+                <div style="text-align:center; border-bottom:1px dashed #000; padding-bottom:0.8rem; margin-bottom:0.8rem;">
+                    <h3 style="margin:0; font-size:1.2rem;">🍱 TIFFIN EXPRESS KITCHEN</h3>
+                    <div style="font-size:0.8rem; font-weight:bold;">KITCHEN ORDER TICKET (KOT)</div>
+                    <div style="font-weight:bold; font-size:1.3rem; margin:0.3rem 0; color:#1B4332;">#ORDER-${order.id}</div>
+                    <div style="font-size:0.75rem;">Time: ${new Date(order.date).toLocaleTimeString()} | Date: ${new Date(order.date).toLocaleDateString()}</div>
+                </div>
+
+                <div style="margin-bottom:0.8rem; font-size:0.85rem; line-height:1.5;">
+                    <strong>Customer:</strong> ${order.customerName || 'Customer'} (Ph: ${order.customerPhone || 'N/A'})<br>
+                    <strong>Delivery Slot:</strong> <span style="background:#FEF3C7; font-weight:bold; padding:2px 4px;">${order.deliverySlot || 'Lunch (12:30 PM)'}</span><br>
+                    <strong>Delivery Address:</strong> ${order.deliveryAddress}
+                </div>
+
+                <div style="border-top:1px dashed #000; border-bottom:1px dashed #000; padding:0.6rem 0; margin-bottom:0.8rem;">
+                    <div style="font-weight:bold; margin-bottom:0.3rem; color:#D97706;">ITEMS TO PREPARE:</div>
+                    <div style="font-size:1.1rem; font-weight:800; color:#000;">${order.itemName}</div>
+                    ${order.notes ? `<div style="font-size:0.8rem; color:#B45309; margin-top:0.3rem;">⚠️ Special Request: ${order.notes}</div>` : ''}
+                </div>
+
+                <div style="text-align:right; font-size:0.95rem; font-weight:bold; margin-bottom:1rem;">
+                    Total: ₹${order.totalAmount || 90} (${order.paymentMethod || 'COD'})
+                </div>
+
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <button onclick="triggerPrintKotSlip()" style="flex:1; padding:0.6rem; background:#1B4332; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">🖨️ Print KOT</button>
+                    <button onclick="downloadKotSlipTxt(${order.id})" style="flex:1; padding:0.6rem; background:#2D6A4F; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">📥 Download</button>
+                    <button onclick="closeKotModal()" style="padding:0.6rem 1rem; background:#E2E8F0; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Close</button>
+                </div>
+            `;
+
+            document.getElementById('kotModal').classList.add('open');
+        }
+
+        function triggerPrintKotSlip() {
+            const content = document.getElementById('kotContent').innerHTML;
+            const printWin = window.open('', '_blank', 'width=450,height=600');
+            if (printWin) {
+                printWin.document.write(`
+                    <html>
+                    <head>
+                        <title>KOT Ticket</title>
+                        <style>
+                            body { font-family: monospace; padding: 15px; margin: 0; }
+                            button { display: none !important; }
+                        </style>
+                    </head>
+                    <body>
+                        ${content}
+                        <script>
+                            window.onload = function() { window.print(); }
+                        <\/script>
+                    </body>
+                    </html>
+                `);
+                printWin.document.close();
+            } else {
+                window.print();
+            }
+        }
+
+        function downloadKotSlipTxt(orderId) {
+            const order = adminOrders.find(o => o.id === orderId);
+            if (!order) return;
+
+            let txt = `=========================================\n`;
+            txt += `      🍱 TIFFIN EXPRESS - KITCHEN TICKET  \n`;
+            txt += `=========================================\n`;
+            txt += `ORDER ID  : #${order.id}\n`;
+            txt += `TIME      : ${new Date(order.date).toLocaleTimeString()}\n`;
+            txt += `SLOT      : ${order.deliverySlot || 'Lunch'}\n`;
+            txt += `CUSTOMER  : ${order.customerName || 'Customer'}\n`;
+            txt += `PHONE     : ${order.customerPhone || 'N/A'}\n`;
+            txt += `ADDRESS   : ${order.deliveryAddress}\n`;
+            txt += `-----------------------------------------\n`;
+            txt += `DISH TO COOK:\n${order.itemName}\n`;
+            if (order.notes) txt += `NOTES: ${order.notes}\n`;
+            txt += `-----------------------------------------\n`;
+            txt += `TOTAL     : ₹${order.totalAmount} (${order.paymentMethod || 'COD'})\n`;
+            txt += `=========================================\n`;
+
+            const blob = new Blob([txt], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `KOT_Order_${order.id}.txt`);
+            a.click();
+        }
+
+        function closeKotModal() {
+            document.getElementById('kotModal').classList.remove('open');
+        }
+
+        function exportOrdersCSV() {
+            if (!adminOrders.length) {
+                alert('No orders to export');
+                return;
+            }
+            let csv = 'Order ID,Customer,Phone,Dishes,Slot,Address,Amount,Payment,Status,Date\n';
+            adminOrders.forEach(o => {
+                csv += `"${o.id}","${o.customerName || ''}","${o.customerPhone || ''}","${o.itemName || ''}","${o.deliverySlot || ''}","${(o.deliveryAddress || '').replace(/"/g, '""')}","${o.totalAmount || 0}","${o.paymentMethod || ''}","${o.status || ''}","${o.date}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `TiffinExpress_Orders_${new Date().toISOString().split('T')[0]}.csv`);
+            a.click();
+        }
+
+        function adminLogout() {
+            fetch('AdminServlet?action=logout')
+                .then(() => {
+                    fetch('UserServlet?action=logout').finally(() => {
+                        window.location.href = 'index.html';
+                    });
+                })
+                .catch(() => {
+                    window.location.href = 'index.html';
+                });
+        }
+
+        function escapeStr(str) {
+            if (!str) return '';
+            return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+    </script>
+</body>
+</html>
