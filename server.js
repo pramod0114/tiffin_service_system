@@ -1117,11 +1117,6 @@ function handleOrdersServlet(req, res) {
     const order = orders.find(o => o.id === orderId);
     if (order && (order.status === 'Pending' || order.status === 'Accepted')) {
       order.status = 'Cancelled';
-<<<<<<< HEAD
-
-=======
-      
->>>>>>> f72e3f8f488fd88a6765ac6467eb5e66030f53ad
       // If paid via wallet or online, refund to wallet
       const user = users.get(order.userId);
       if (user && (order.paymentMethod === 'Tiffin Wallet' || order.paymentMethod.includes('Online') || order.paymentMethod.includes('UPI'))) {
@@ -1271,11 +1266,7 @@ app.post('/api/supportChat', async (req, res) => {
   const ai = getGenAI();
   if (ai) {
     try {
-<<<<<<< HEAD
       const menuSummary = menuItems.map(m =>
-=======
-      const menuSummary = menuItems.map(m => 
->>>>>>> f72e3f8f488fd88a6765ac6467eb5e66030f53ad
         `- ${m.itemName} (₹${m.price}, ${m.day}): ${m.description} [${m.calories} kcal, ${m.protein}g protein, Spiciness: ${m.spiciness}/3]`
       ).join('\n');
 
@@ -1473,11 +1464,11 @@ app.get('/api/health', (req, res) => {
 });
 
 // Static assets
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Fallback
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, '0.0.0.0', () => {
