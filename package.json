@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "node server.js",
     "build": "echo 'Build complete'",
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "node --check server.js script.js"
   },
   "dependencies": {
     "@google/genai": "^2.17.1",

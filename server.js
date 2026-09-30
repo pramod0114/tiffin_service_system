@@ -12,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // MySQL Database Configuration (root / admin@1234 / tiffin_service)
 const MYSQL_CONFIG = {
@@ -33,6 +33,10 @@ let dbLastError = null;
 
 // Asynchronously initialize MySQL database and tables
 async function initMySQLDatabase() {
+  if (!process.env.MYSQL_HOST) {
+    console.log('ℹ️ No MySQL host configured. High-performance memory storage active with live persistence.');
+    return;
+  }
   try {
     // 1. First connect to MySQL server without database to ensure database exists
     const rootConn = await mysql.createConnection({
@@ -279,10 +283,10 @@ app.use(session({
 
 // In-Memory Data Store
 const users = new Map([
-  ['mahajanpramod442@gmail.com', {
-    name: 'Pramod Mahajan',
-    phone: '8767575963',
-    email: 'mahajanpramod442@gmail.com',
+  ['shrwanibhosale01@gmail.com', {
+    name: 'Shrawani Bhosale',
+    phone: '9561801601',
+    email: 'shrwanibhosale01@gmail.com',
     password: 'password123',
     address: 'Plot 42, Green Valley, MG Road, Pune',
     savedAddresses: [
@@ -292,10 +296,10 @@ const users = new Map([
     walletBalance: 350,
     dietaryPreference: 'veg'
   }],
-  ['rahul@example.com', {
-    name: 'Rahul Verma',
-    phone: '8767575963',
-    email: 'rahul@example.com',
+  ['premjadhav02@gmail.com', {
+    name: 'Prem Jadhav',
+    phone: '9561801601',
+    email: 'premjadhav02@gmail.com',
     password: 'password123',
     address: 'Room 205, Boys Hostel B, University Campus, Pune',
     savedAddresses: [
@@ -470,9 +474,9 @@ let nextOrderId = 104;
 let orders = [
   {
     id: 101,
-    userId: 'mahajanpramod442@gmail.com',
-    customerName: 'Pramod Mahajan',
-    customerPhone: '8767575963',
+    userId: 'shrwanibhosale01@gmail.com',
+    customerName: 'Shrawani Bhosale',
+    customerPhone: '9561801601',
     itemName: 'Deluxe North Indian Thali',
     items: [
       { itemName: 'Deluxe North Indian Thali', price: 120, quantity: 1, notes: 'Less spicy please' }
@@ -490,9 +494,9 @@ let orders = [
   },
   {
     id: 102,
-    userId: 'mahajanpramod442@gmail.com',
-    customerName: 'Pramod Mahajan',
-    customerPhone: '8767575963',
+    userId: 'shrwanibhosale01@gmail.com',
+    customerName: 'Shrawani Bhosale',
+    customerPhone: '9561801601',
     itemName: 'Paneer Butter Masala Combo',
     items: [
       { itemName: 'Paneer Butter Masala Combo', price: 95, quantity: 2, notes: 'Extra gravy' }
@@ -511,9 +515,9 @@ let orders = [
   },
   {
     id: 103,
-    userId: 'rahul@example.com',
-    customerName: 'Rahul Verma',
-    customerPhone: '8767575963',
+    userId: 'premjadhav02@gmail.com',
+    customerName: 'Prem Jadhav',
+    customerPhone: '9561801601',
     itemName: 'Homestyle Rajma Chawal',
     items: [
       { itemName: 'Homestyle Rajma Chawal', price: 75, quantity: 1, notes: 'Mild spice' }
@@ -534,9 +538,9 @@ let orders = [
 let subscriptions = [
   {
     id: 'SUB-8812',
-    userId: 'mahajanpramod442@gmail.com',
-    customerName: 'Pramod Mahajan',
-    customerPhone: '8767575963',
+    userId: 'shrwanibhosale01@gmail.com',
+    customerName: 'Shrawani Bhosale',
+    customerPhone: '9561801601',
     planType: '30-Day Monthly Tiffin Plan',
     mealsPerDay: 'Lunch & Dinner',
     dietary: 'Pure Veg',
@@ -554,7 +558,7 @@ let subscriptions = [
 let reviews = [
   {
     id: 'rev-1',
-    customerName: 'Pramod M.',
+    customerName: 'Shrawani B.',
     rating: 5,
     dishName: 'Deluxe North Indian Thali',
     comment: 'The soft rotis and rich dal makhani remind me of authentic homestyle cooking. Best tiffin service in Pune!',
@@ -562,7 +566,7 @@ let reviews = [
   },
   {
     id: 'rev-2',
-    customerName: 'Rahul V.',
+    customerName: 'Prem J.',
     rating: 5,
     dishName: 'Homestyle Rajma Chawal',
     comment: 'Super affordable and hygienic. Being a college student, this saved me from unhygienic canteen food.',
@@ -638,7 +642,7 @@ function handleUserServlet(req, res) {
 
     const newUser = {
       name,
-      phone: phone || '8767575963',
+      phone: phone || '9561801601',
       email,
       password,
       address: address || 'Pune',
@@ -1048,7 +1052,7 @@ function handleOrdersServlet(req, res) {
       id: nextOrderId++,
       userId: userEmail,
       customerName: currentUser.name,
-      customerPhone: currentUser.phone || '8767575963',
+      customerPhone: currentUser.phone || '9561801601',
       itemName: items.map(i => `${i.quantity > 1 ? i.quantity + 'x ' : ''}${i.itemName}`).join(', '),
       items,
       rawTotal,
@@ -1304,7 +1308,7 @@ Guidelines for your reply:
 4. Always maintain a warm, welcoming, polite Indian hospitality tone ("Namaste", "wholesome meals", "made with love"). Never refer to yourself as Ananya. You are the TiffinExpress Master Chef.`;
 
       const geminiResponse = await ai.models.generateContent({
-        model: 'gemini-3.7-flash',
+        model: 'gemini-2.5-flash',
         contents: userMessage,
         config: {
           systemInstruction: systemPrompt,
